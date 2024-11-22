@@ -23,9 +23,10 @@
       .last-episode-pub-date {
         font-size: $text-sm;
         font-weight: $font-weight-medium;
+        color: #6ACAB7 !important;
 
         @include themeGen() {
-          color: getThemeVal('textTertiary');
+          color: #6ACAB7 !important;
         }
       }
 

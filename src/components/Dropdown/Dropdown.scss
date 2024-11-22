@@ -71,7 +71,7 @@ body {
     }
 
     .react-dropdown-select-dropdown {
-      border: none;
+      border: 1px solid #6ACAB7;
       border-radius: $item-border-radius;
       left: unset !important;
       margin: 0;
@@ -80,7 +80,7 @@ body {
       right: 0 !important;
 
       @include themeGen() {
-        background-color: getThemeVal('dropdownMenu');
+        background-color: #04081A;
       }
 
       .react-dropdown-select-item {
@@ -104,7 +104,7 @@ body {
           box-shadow: $box-shadow;
 
           @include themeGen() {
-            background-color: getThemeVal('dropdownMenuSelected');
+            background-color: rgba(106, 202, 183, 0.1);
           }
         }
       }

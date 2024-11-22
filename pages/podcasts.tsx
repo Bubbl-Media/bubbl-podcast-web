@@ -291,113 +291,123 @@ export default function Podcasts({
         twitterDescription={meta.description}
         twitterTitle={meta.title}
       />
-      <PageHeader
-        handleVideoOnlyModeToggle={(newStateVal) => {
-          OmniAural.setGlobalFiltersVideoOnlyMode(newStateVal)
-          setFilterQuery({
-            ...filterQuery,
-            videoOnlyMode: newStateVal
-          })
-          const globalFilters = cookies.globalFilters || {}
-          setCookie(
-            'globalFilters',
-            {
-              ...globalFilters,
+      <div style={{ 
+        backgroundColor: '#04081A',
+        height: '100vh',
+        display: 'flex',
+        flexDirection: 'column'
+      }}>
+        <PageHeader
+          handleVideoOnlyModeToggle={(newStateVal) => {
+            OmniAural.setGlobalFiltersVideoOnlyMode(newStateVal)
+            setFilterQuery({
+              ...filterQuery,
               videoOnlyMode: newStateVal
-            },
-            { path: PV.Cookies.path }
-          )
-        }}
-        noMarginBottom={
-          (filterFrom !== PV.Filters.from._category && !!podcastsListDataCount) ||
-          (isCategoryPage && filterFrom === PV.Filters.from._category)
-        }
-        primaryOnChange={_handlePrimaryOnChange}
-        primaryOptions={PV.Filters.dropdownOptions.podcasts.from}
-        primarySelected={filterFrom}
-        secondaryOnChange={_handleSortOnChange}
-        secondaryOptions={
-          filterFrom === PV.Filters.from._subscribed
-            ? PV.Filters.dropdownOptions.podcasts.sort.subscribed
-            : PV.Filters.dropdownOptions.podcasts.sort.all
-        }
-        secondarySelected={filterSort}
-        text={pageHeaderText}
-        videoOnlyMode={videoOnlyMode}
-      />
-      <PageScrollableContent noPaddingTop={showLoginMessage || isCategoryPage}>
-        {!showLoginMessage && !isCategoryPage && (
-          <SearchBarFilter
-            eventType='podcasts'
-            handleClear={_handleSearchClear}
-            handleSubmit={_handleSearchSubmit}
-            includeBottomPadding={isCategoriesPage}
-            placeholder={t('Search podcasts')}
-          />
-        )}
-        {isCategoriesPage && (
-          <Tiles
-            groupAriaLabel={t('Categories')}
-            items={categories}
-            onClick={(id: string) => {
-              setFilterQuery({
-                ...filterQuery,
-                filterCategoryId: id,
-                filterPage: 1
-              })
-              const selectedCategory = getCategoryById(id)
-              router.push(`${PV.RoutePaths.web.podcasts}?category=${selectedCategory.slug}`)
-            }}
-          />
-        )}
-        {showLoginMessage && (
-          <MessageWithAction
-            actionLabel={t('Login')}
-            actionOnClick={() => OmniAural.modalsLoginShow()}
-            message={t('LoginToSubscribeToPodcasts')}
-          />
-        )}
-        {(isLoggedInSubscribedPage || filterFrom === PV.Filters.from._all || isCategoryPage) && (
-          <>
-            <List
-              handleSelectByCategory={() => _handlePrimaryOnChange([PV.Filters.dropdownOptions.podcasts.from[2]])}
-              handleShowAllPodcasts={() => _handlePrimaryOnChange([PV.Filters.dropdownOptions.podcasts.from[0]])}
-              hideNoResultsMessage={isQuerying}
-              isSubscribedFilter={
-                filterFrom === PV.Filters.from._subscribed && userInfo?.subscribedPodcastIds?.length === 0
-              }
-            >
-              {generatePodcastListElements(podcastsListData)}
-            </List>
-            <Pagination
-              currentPageIndex={filterPage}
-              handlePageNavigate={(newPage) =>
+            })
+            const globalFilters = cookies.globalFilters || {}
+            setCookie(
+              'globalFilters',
+              {
+                ...globalFilters,
+                videoOnlyMode: newStateVal
+              },
+              { path: PV.Cookies.path }
+            )
+          }}
+          noMarginBottom={
+            (filterFrom !== PV.Filters.from._category && !!podcastsListDataCount) ||
+            (isCategoryPage && filterFrom === PV.Filters.from._category)
+          }
+          primaryOnChange={_handlePrimaryOnChange}
+          primaryOptions={PV.Filters.dropdownOptions.podcasts.from}
+          primarySelected={filterFrom}
+          secondaryOnChange={_handleSortOnChange}
+          secondaryOptions={
+            filterFrom === PV.Filters.from._subscribed
+              ? PV.Filters.dropdownOptions.podcasts.sort.subscribed
+              : PV.Filters.dropdownOptions.podcasts.sort.all
+          }
+          secondarySelected={filterSort}
+          text={pageHeaderText}
+          videoOnlyMode={videoOnlyMode}
+        />
+        <PageScrollableContent 
+          noPaddingTop={showLoginMessage || isCategoryPage}
+          style={{ flex: 1, overflowY: 'auto' }}
+        >
+          {!showLoginMessage && !isCategoryPage && (
+            <SearchBarFilter
+              eventType='podcasts'
+              handleClear={_handleSearchClear}
+              handleSubmit={_handleSearchSubmit}
+              includeBottomPadding={isCategoriesPage}
+              placeholder={t('Search podcasts')}
+              rounded={true}
+            />
+          )}
+          {isCategoriesPage && (
+            <Tiles
+              groupAriaLabel={t('Categories')}
+              items={categories}
+              onClick={(id: string) => {
                 setFilterQuery({
                   ...filterQuery,
-                  filterPage: newPage
+                  filterCategoryId: id,
+                  filterPage: 1
                 })
-              }
-              handlePageNext={() => {
-                if (filterPage + 1 <= pageCount)
-                  setFilterQuery({
-                    ...filterQuery,
-                    filterPage: filterPage + 1
-                  })
+                const selectedCategory = getCategoryById(id)
+                router.push(`${PV.RoutePaths.web.podcasts}?category=${selectedCategory.slug}`)
               }}
-              handlePagePrevious={() => {
-                if (filterPage - 1 > 0)
-                  setFilterQuery({
-                    ...filterQuery,
-                    filterPage: filterPage - 1
-                  })
-              }}
-              pageCount={pageCount}
-              show={pageCount > 1}
             />
-          </>
-        )}
-        <Footer />
-      </PageScrollableContent>
+          )}
+          {showLoginMessage && (
+            <MessageWithAction
+              actionLabel={t('Login')}
+              actionOnClick={() => OmniAural.modalsLoginShow()}
+              message={t('LoginToSubscribeToPodcasts')}
+            />
+          )}
+          {(isLoggedInSubscribedPage || filterFrom === PV.Filters.from._all || isCategoryPage) && (
+            <>
+              <List
+                handleSelectByCategory={() => _handlePrimaryOnChange([PV.Filters.dropdownOptions.podcasts.from[2]])}
+                handleShowAllPodcasts={() => _handlePrimaryOnChange([PV.Filters.dropdownOptions.podcasts.from[0]])}
+                hideNoResultsMessage={isQuerying}
+                isSubscribedFilter={
+                  filterFrom === PV.Filters.from._subscribed && userInfo?.subscribedPodcastIds?.length === 0
+                }
+              >
+                {generatePodcastListElements(podcastsListData)}
+              </List>
+              <Pagination
+                currentPageIndex={filterPage}
+                handlePageNavigate={(newPage) =>
+                  setFilterQuery({
+                    ...filterQuery,
+                    filterPage: newPage
+                  })
+                }
+                handlePageNext={() => {
+                  if (filterPage + 1 <= pageCount)
+                    setFilterQuery({
+                      ...filterQuery,
+                      filterPage: filterPage + 1
+                    })
+                }}
+                handlePagePrevious={() => {
+                  if (filterPage - 1 > 0)
+                    setFilterQuery({
+                      ...filterQuery,
+                      filterPage: filterPage - 1
+                    })
+                }}
+                pageCount={pageCount}
+                show={pageCount > 1}
+              />
+            </>
+          )}
+        </PageScrollableContent>
+      </div>
     </>
   )
 }

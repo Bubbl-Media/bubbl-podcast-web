@@ -11,6 +11,7 @@ type Props = {
   handleSubmit?: any
   includeBottomPadding?: boolean
   placeholder: string
+  rounded?: boolean
   smaller?: boolean
 }
 
@@ -21,13 +22,15 @@ export const SearchBarFilter = ({
   handleSubmit,
   includeBottomPadding,
   placeholder,
+  rounded = false,
   smaller
 }: Props) => {
   const [searchText, setSearchText] = useState<string>('')
   const wrapperClass = classNames(
     'search-bar-filter',
     includeBottomPadding ? 'bottom-padding' : '',
-    smaller ? 'smaller' : ''
+    smaller ? 'smaller' : '',
+    rounded ? 'rounded' : ''
   )
 
   /* useEffects */

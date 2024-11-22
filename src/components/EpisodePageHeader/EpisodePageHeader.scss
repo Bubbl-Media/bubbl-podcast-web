@@ -4,6 +4,7 @@
   border-radius: 0;
   display: flex;
   padding: 16px 0;
+  background-color: #04081A;
 
   .top-wrapper {
     align-items: center;
@@ -24,6 +25,7 @@
       .podcast-title {
         font-size: $text-lg;
         font-weight: $font-weight-medium;
+        color: #6ACAB7;
         @include line-clamp(1);
       }
 
@@ -130,9 +132,7 @@
   .episode-page-header {
     [href] {
       &:hover {
-        @include themeGen() {
-          color: getThemeVal('textSecondary');
-        }
+        color: rgba(106, 202, 183, 0.8);
       }
     }
   }

@@ -5,15 +5,15 @@
   border-radius: 5%;
   background: linear-gradient(20deg, #20244e, #20244e, #20244e, #5d86b0);
   display: flex;
-  justify-content: flex-end;
-  align-items: flex-end;
+  justify-content: center;
+  align-items: center;
   padding: 20px;
   margin: 10px;
 }
 
 .tile-box-text {
   font-size: clamp(2vw, 26px, 18px);
-  text-align: right;
+  text-align: center;
 
   @include themeGen() {
     color: getThemeVal('textPrimary');

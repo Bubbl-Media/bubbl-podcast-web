@@ -1,153 +1,35 @@
 .button-circle {
-  align-items: center;
-  border-width: $border-width-default;
-  border-radius: $button-circle-radius;
-  border-style: solid;
+  border: 1px solid #6ACAB7 !important;
+  border-radius: 50%;
+  background: transparent;
+  width: 32px;
+  height: 32px;
   display: flex;
   justify-content: center;
-
-  @include themeGen() {
-    border-color: getThemeVal('buttonTertiaryBorder');
-    background-color: getThemeVal('buttonSecondaryBackground');
+  align-items: center;
+  
+  &:hover {
+    border-color: rgba(106, 202, 183, 0.8) !important;
+    box-shadow: 0 0 10px rgba(106, 202, 183, 0.3);
   }
-
-  &.icon-only {
-    border-color: transparent;
-    background-color: unset;
-    @include themeGen() {
-      color: getThemeVal('textSecondary');
-    }
-  }
-
-  svg {
-    vertical-align: 0;
+  
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 10px rgba(106, 202, 183, 0.5);
   }
 
   &.small {
-    height: 32px;
-    line-height: 32px;
-    width: 32px;
-
-    &.play,
-    &.pause {
-      svg {
-        height: unset;
-        margin-left: 1px;
-        width: 9px;
-      }
-    }
-
-    &.backwards {
-      margin-right: 8px;
-      padding-right: 1px;
-      svg {
-        width: 0.4375em;
-        height: unset;
-      }
-    }
-
-    &.forwards {
-      margin-left: 8px;
-      padding-left: 1px;
-      svg {
-        width: 0.4375em;
-        height: unset;
-      }
-    }
+    width: 28px;
+    height: 28px;
   }
 
   &.medium {
-    height: 48px;
-    line-height: 48px;
-    width: 48px;
-
-    &.backwards {
-      margin-right: 8px;
-      padding-right: 1px;
-      svg {
-        width: 0.4375em;
-        height: unset;
-      }
-    }
-
-    &.forwards {
-      margin-left: 8px;
-      padding-left: 1px;
-      svg {
-        width: 0.4375em;
-        height: unset;
-      }
-    }
-
-    &.play {
-      padding-left: 1px;
-      svg {
-        width: 12px;
-        height: unset;
-      }
-    }
-
-    &.pause {
-      svg {
-        width: 12px;
-        height: unset;
-      }
-    }
-
-    &.remove,
-    &.move {
-      svg {
-        height: unset;
-        width: 20px;
-      }
-    }
-
-    &.clear {
-      margin: -8px 0;
-
-      svg {
-        height: unset;
-        width: 20px;
-      }
-    }
+    width: 32px;
+    height: 32px;
   }
 
   &.large {
-    height: 64px;
-    line-height: 64px;
-    width: 64px;
-
-    &.play {
-      padding-left: 3px;
-      svg {
-        width: 18px;
-        height: unset;
-      }
-    }
-
-    &.pause {
-      svg {
-        width: 18px;
-        height: unset;
-      }
-    }
-  }
-}
-
-@media (hover: hover) {
-  .button-circle {
-    &:hover {
-      @include themeGen() {
-        border-color: getThemeVal('buttonTertiaryBorder');
-      }
-    }
-
-    &.icon-only {
-      &:hover {
-        @include themeGen() {
-          border-color: transparent;
-        }
-      }
-    }
+    width: 36px;
+    height: 36px;
   }
 }

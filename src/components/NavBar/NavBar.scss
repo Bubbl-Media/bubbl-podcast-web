@@ -3,6 +3,8 @@
   flex-direction: column;
   overflow: hidden;
   width: $nav-width;
+  box-shadow: 0 0 10px rgba(106, 202, 183, 0.5);
+  border-right: 1px solid rgba(106, 202, 183, 0.5);
 
   @include themeGen() {
     background-color: getThemeVal('backgroundSecondary');

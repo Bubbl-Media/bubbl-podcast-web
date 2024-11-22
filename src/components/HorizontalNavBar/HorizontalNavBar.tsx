@@ -1,13 +1,10 @@
-import { faChevronLeft, faChevronRight, faMoon, faSun, faUserCircle } from '@fortawesome/free-solid-svg-icons'
-import { faUserCircle as faUserCircleRegular } from '@fortawesome/free-regular-svg-icons'
+import { faChevronLeft, faChevronRight, faMoon, faSun } from '@fortawesome/free-solid-svg-icons'
 import { useRouter } from 'next/router'
-import { useOmniAural } from 'omniaural'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useCookies } from 'react-cookie'
-import { ButtonCircle, Dropdown, SwitchWithIcons } from '~/components'
+import { ButtonCircle, SwitchWithIcons } from '~/components'
 import { PV } from '~/resources'
-import { OmniAuralState } from '~/state/omniauralState'
 
 type Props = {
   serverCookies: any
@@ -18,7 +15,6 @@ export const HorizontalNavBar = ({ serverCookies }: Props) => {
   const [, setCookie, removeCookie] = useCookies([])
   const router = useRouter()
   const { t } = useTranslation()
-  const [userInfo] = useOmniAural('session.userInfo') as [OmniAuralState['session']['userInfo']]
 
   useEffect(() => {
     if (!lightModeChecked) {
@@ -27,8 +23,6 @@ export const HorizontalNavBar = ({ serverCookies }: Props) => {
       setCookie(PV.Cookies.keys.lightMode, lightModeChecked, { path: PV.Cookies.path })
     }
   }, [lightModeChecked])
-
-  /* Function Helpers */
 
   const navigateBack = () => {
     window.history.back()
@@ -44,10 +38,6 @@ export const HorizontalNavBar = ({ serverCookies }: Props) => {
       return !prev
     })
   }
-
-  /* Render Helpers */
-
-  const dropdownItems = PV.NavBar.generateDropdownItems()
 
   return (
     <div className='horizontal-navbar-wrapper'>
@@ -66,16 +56,6 @@ export const HorizontalNavBar = ({ serverCookies }: Props) => {
             faIcon={faChevronRight}
             onClick={navigateForward}
             size='small'
-          />
-        </div>
-        <div className='navbar-secondary__dropdown'>
-          <Dropdown
-            dropdownAriaLabel={t('My account')}
-            dropdownWidthClass='width-small'
-            faIcon={userInfo ? faUserCircle : faUserCircleRegular}
-            onChange={(selected) => PV.NavBar.dropdownOnChange(selected, router, userInfo)}
-            options={dropdownItems}
-            text={userInfo?.name}
           />
         </div>
         <div className='navbar-secondary__theme-toggle'>

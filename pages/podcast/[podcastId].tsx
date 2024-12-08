@@ -9,7 +9,6 @@ import {
   ClipListItem,
   ColumnsWrapper,
   EpisodeListItem,
-  Footer,
   List,
   LiveScheduleItem,
   WebLNV4VForm,
@@ -293,7 +292,6 @@ export default function Podcast({
             </SideContent>
           }
         />
-        <Footer />
       </PageScrollableContent>
     </>
   )

@@ -6,7 +6,6 @@ import type { Podcast } from 'podverse-shared'
 import { useEffect, useRef, useState } from 'react'
 import { useCookies } from 'react-cookie'
 import {
-  Footer,
   List,
   MessageWithAction,
   Meta,
@@ -333,7 +332,6 @@ export default function Podcasts({
         />
         <PageScrollableContent 
           noPaddingTop={showLoginMessage || isCategoryPage}
-          style={{ flex: 1, overflowY: 'auto' }}
         >
           {!showLoginMessage && !isCategoryPage && (
             <SearchBarFilter

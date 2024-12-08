@@ -7,7 +7,6 @@ import { useEffect, useRef, useState } from 'react'
 import { useCookies } from 'react-cookie'
 import {
   EpisodeListItem,
-  Footer,
   List,
   MessageWithAction,
   Meta,
@@ -390,7 +389,6 @@ export default function Episodes({
             />
           </>
         )}
-        <Footer />
       </PageScrollableContent>
     </>
   )

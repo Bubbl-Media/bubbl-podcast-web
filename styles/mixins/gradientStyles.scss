@@ -3,14 +3,9 @@
     #{$parentClass} {
       background-image: linear-gradient(
         to right,
-        rgba(106, 202, 183, 0.2) -3%,  // Light teal
-        rgba(106, 202, 183, 0.4)       // Slightly darker teal
+        rgba(106, 202, 183, 0.2) -3%,
+        rgba(106, 202, 183, 0.4)
       );
-    }
-  }
-
-  .theme-light {
-    #{$parentClass} {
     }
   }
 }
@@ -26,6 +21,5 @@
     }
   }
 
-  .theme-light {
-  }
+
 }

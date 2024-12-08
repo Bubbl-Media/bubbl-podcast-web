@@ -1,10 +1,10 @@
-import { SSRConfig } from 'next-i18next'
 import { NowPlayingItem } from 'podverse-shared'
 import { ClientSideCookies } from './cookies'
 
-export type I18nPage = SSRConfig
+// Import from serverSideTranslations instead
+import type { SSRConfig } from 'next-i18next/dist/types/types'
 
-export interface Page extends I18nPage {
+export interface Page extends SSRConfig {
   serverUserInfo: any
   serverUserQueueItems: NowPlayingItem[]
   serverCookies: ClientSideCookies

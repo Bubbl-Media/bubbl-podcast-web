@@ -1,5 +1,6 @@
 import { GetServerSideProps } from 'next'
-import { Trans, useTranslation } from 'next-i18next'
+import { useTranslation } from 'next-i18next'
+import { Trans } from 'react-i18next'
 import { Page } from '~/lib/utility/page'
 import { PV } from '~/resources'
 import {
@@ -56,7 +57,9 @@ export default function About(props: ServerProps) {
                   i18nKey="Extend Membership Text 4"
                   t={t}
                   components={[
-                    <PVLink className='footer-link-contribute' href='/contribute' key="contribute">{}</PVLink>
+                    <PVLink className='footer-link-contribute' href='/contribute' key="contribute">
+                      Your Link Text Here
+                    </PVLink>
                   ]}
                   values={{ contributePage: t('Contribute page')}}
                 />

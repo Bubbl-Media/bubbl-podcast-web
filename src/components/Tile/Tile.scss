@@ -3,7 +3,12 @@
   height: 15vw;
   cursor: pointer;
   border-radius: 5%;
-  background: linear-gradient(20deg, #20244e, #20244e, #20244e, #5d86b0);
+  background: linear-gradient(20deg, 
+    #04081A,  // Dark purple
+    #04081A,  // Dark purple
+    #04081A,  // Dark purple
+    #6ACAB7   // Teal
+  );
   display: flex;
   justify-content: center;
   align-items: center;

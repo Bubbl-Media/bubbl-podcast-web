@@ -1,8 +1,21 @@
 .episode-info {
   margin: 24px 0 0 0;
+  background-color: #04081A;
+
+  h2 {
+    color: #6ACAB7;
+  }
 
   .truncated-text {
     margin: 20px 0 26px 0;
+
+    a {
+      color: #6ACAB7;
+
+      &:hover {
+        color: rgba(106, 202, 183, 0.8);
+      }
+    }
   }
 
   .media-item-controls {

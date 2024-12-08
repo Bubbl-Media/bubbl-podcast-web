@@ -1,7 +1,11 @@
 @mixin headerGradientStyle($parentClass) {
   .theme-dark {
     #{$parentClass} {
-      background-image: linear-gradient(to right, $blueLightNavyLight -3%, $blueDarkBlueGrey);
+      background-image: linear-gradient(
+        to right,
+        rgba(106, 202, 183, 0.2) -3%,  // Light teal
+        rgba(106, 202, 183, 0.4)       // Slightly darker teal
+      );
     }
   }
 

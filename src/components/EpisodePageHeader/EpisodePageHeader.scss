@@ -34,12 +34,21 @@
         font-weight: $font-weight-light;
         margin-top: 4px;
         @include line-clamp(3);
+
+        a {
+          color: #6ACAB7;
+
+          &:hover {
+            color: rgba(106, 202, 183, 0.8);
+          }
+        }
       }
 
       .sub-labels {
         align-self: flex-start;
         font-size: $text-lg;
         margin-top: 6px;
+        color: #6ACAB7;
       }
 
       .header-sub-buttons {

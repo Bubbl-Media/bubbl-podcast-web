@@ -239,51 +239,6 @@ export default function EpisodePage({
               {hasValidCommentTag ? <Comments comment={comment} isLoading={commentsLoading} /> : null}
               {hasChatRoom ? <ChatRoom chatIRCURL={liveItem?.chatIRCURL} /> : null}
               {hasChapters ? <Chapters chapters={serverChapters} episode={serverEpisode} /> : null}
-              {!isLiveItem && (
-                <>
-                  <PageHeader
-                    isSubHeader
-                    noMarginBottom
-                    secondaryOnChange={(selectedItems: any[]) => {
-                      const selectedItem = selectedItems[0]
-                      setFilterState({
-                        clipsFilterPage: 1,
-                        clipsFilterSort: selectedItem.key
-                      })
-                    }}
-                    secondaryOptions={PV.Filters.dropdownOptions.clip.sort}
-                    secondarySelected={clipsFilterSort}
-                    text={t('Clips')}
-                  />
-                  <List>{generateClipListElements()}</List>
-                </>
-              )}
-              <Pagination
-                currentPageIndex={clipsFilterPage}
-                handlePageNavigate={(newPage) => {
-                  setFilterState({ clipsFilterPage: newPage, clipsFilterSort })
-                }}
-                handlePageNext={() => {
-                  const newPage = clipsFilterPage + 1
-                  if (newPage <= clipsPageCount) {
-                    setFilterState({
-                      clipsFilterPage: newPage,
-                      clipsFilterSort
-                    })
-                  }
-                }}
-                handlePagePrevious={() => {
-                  const newPage = clipsFilterPage - 1
-                  if (newPage > 0) {
-                    setFilterState({
-                      clipsFilterPage: newPage,
-                      clipsFilterSort
-                    })
-                  }
-                }}
-                pageCount={clipsPageCount}
-                show={clipsPageCount > 1}
-              />
             </>
           }
           sideColumnChildren={
@@ -301,7 +256,6 @@ export default function EpisodePage({
             </SideContent>
           }
         />
-        <Footer />
       </PageScrollableContent>
     </>
   )

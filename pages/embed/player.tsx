@@ -1,7 +1,7 @@
 import { GetServerSideProps } from 'next'
 import { useOmniAural } from 'omniaural'
 import { convertToNowPlayingItem, Episode, Podcast } from 'podverse-shared'
-import { I18nPage } from '~/lib/utility/page'
+import { Page } from '~/lib/utility/page'
 import { PV } from '~/resources'
 import { Meta } from '~/components/Meta/Meta'
 import { getDefaultEmbedServerSideProps } from '~/services/serverSideHelpers'
@@ -16,14 +16,20 @@ import { OmniAuralState } from '~/state/omniauralState'
 import { getEpisodeById, getEpisodeByPodcastIdAndGuid } from '~/services/episode'
 import { useTranslation } from 'next-i18next'
 
-interface ServerProps extends I18nPage {
-  episodeGuid?: string
-  episodeId?: string
-  episodeMediaUrl?: string
-  episodePubDate?: Date
-  episodeTitle?: string
-  podcastId?: string
-  showAllEpisodes?: boolean
+interface EmbedPlayerProps {
+  showAllEpisodes: boolean
+  podcastTitle?: any
+  podcastId?: any
+  episodeTitle?: any
+  episodePubDate?: any
+  episodeMediaUrl?: any
+  episodeId?: any
+  episodeGuid?: any
+  _nextI18Next: {
+    initialI18nStore: any
+    initialLocale: string
+    userConfig: any
+  }
 }
 
 const keyPrefix = 'embed_player'
@@ -38,7 +44,7 @@ export default function EmbedPlayerPage({
   episodeTitle,
   podcastId,
   showAllEpisodes
-}: ServerProps) {
+}: EmbedPlayerProps) {
   /* Initialize */
   const { t } = useTranslation()
   const [hasInitialized, setHasInitialized] = useState<boolean>(false)
@@ -205,7 +211,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
   const defaultServerProps = await getDefaultEmbedServerSideProps(ctx, locale)
 
-  const props: ServerProps = {
+  const props: EmbedPlayerProps = {
     ...defaultServerProps,
     ...(episodeGuid ? { episodeGuid } : {}),
     ...(episodeId ? { episodeId } : {}),
@@ -214,7 +220,12 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     ...(episodeTitle ? { episodeTitle } : {}),
     ...(podcastId ? { podcastId } : {}),
     ...(podcastTitle ? { podcastTitle } : {}),
-    showAllEpisodes: showAllEpisodes ? showAllEpisodes.toLowerCase() === 'true' : false
+    showAllEpisodes: showAllEpisodes ? showAllEpisodes.toLowerCase() === 'true' : false,
+    _nextI18Next: {
+      initialI18nStore: null,
+      initialLocale: locale,
+      userConfig: null
+    }
   }
 
   return { props }

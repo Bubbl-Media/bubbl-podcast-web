@@ -1,22 +1,10 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const { i18n } = require('./next-i18next.config')
-const { withSentryConfig } = require('@sentry/nextjs')
 
 const isDev = process.env.NODE_ENV === 'development' || !process.env.NODE_ENV
 const isProd = process.env.NODE_ENV === 'production'
 
 const envVars = {}
-const sentryWebpackPluginOptions = {
-  // Additional config options for the Sentry Webpack plugin. Keep in mind that
-  // the following options are set automatically, and overriding them is not
-  // recommended:
-  //   release, url, org, project, authToken, configFile, stripPrefix,
-  //   urlPrefix, include, ignore
-
-  silent: true // Suppresses all logs
-  // For all available options, see:
-  // https://github.com/getsentry/sentry-webpack-plugin#options.
-}
 
 const moduleExports = {
   async headers() {
@@ -34,10 +22,6 @@ const moduleExports = {
   },
   reactStrictMode: true,
   i18n,
-  sentry: {
-    disableServerWebpackPlugin: !isProd,
-    disableClientWebpackPlugin: !isProd
-  },
   serverRuntimeConfig: {
     IS_DEV: isDev,
     API_PATH: process.env.API_PATH,
@@ -45,10 +29,6 @@ const moduleExports = {
     API_DOMAIN: process.env.API_DOMAIN,
     API_PROTOCOL: process.env.API_PROTOCOL,
     WEB_PROTOCOL: process.env.WEB_PROTOCOL,
-    // Use PUBLIC_WEB_DOMAIN so variable renders properly for iMessage shared URLs,
-    // otherwise "podverse_web" (the docker variable name "podverse_web") will render
-    // in the URL. I'm not totally sure how/why the docker variable is not converting
-    // into the value on the server side...
     WEB_DOMAIN: process.env.PUBLIC_WEB_DOMAIN,
     APP_DOWNLOAD_ON_THE_APP_STORE_URL: process.env.APP_DOWNLOAD_ON_THE_APP_STORE_URL,
     APP_GET_IT_ON_FDROID_URL: process.env.APP_GET_IT_ON_FDROID_URL,
@@ -103,18 +83,8 @@ const moduleExports = {
     return c;
   },
   eslint: {
-    // Warning: This allows production builds to successfully complete even if
-    // your project has ESLint errors.
     ignoreDuringBuilds: true,
   },
 }
 
-if (process.env.SENTRY_AUTH_TOKEN || process.env.USE_SENTRY) {
-  module.exports = withSentryConfig(moduleExports, sentryWebpackPluginOptions)
-} else {
-  console.log(
-    'SENTRY_AUTH_TOKEN was not found! If this is a production build please look at your environment variable configuration'
-  )
-
-  module.exports = moduleExports
-}
+module.exports = moduleExports

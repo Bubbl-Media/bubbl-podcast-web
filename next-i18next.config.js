@@ -1,11 +1,9 @@
-import i18n from 'i18next';
-import { initReactI18next } from 'react-i18next';
-import { locales } from './src/lib/utility/locales';  // Import your locales
+const i18n = require('i18next');
+const { initReactI18next } = require('react-i18next');
 
 i18n
   .use(initReactI18next)
   .init({
-    resources: locales,
     fallbackLng: 'en',
     defaultLocale: 'en',
     supportedLngs: ['da', 'de', 'el', 'en', 'es', 'fr', 'it', 'lt', 'nb-NO', 'nl', 'pt', 'pt-BR', 'ru', 'sv', 'tr'],
@@ -14,4 +12,4 @@ i18n
     }
   });
 
-export default i18n;
+module.exports = i18n;

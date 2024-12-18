@@ -14,7 +14,7 @@ export const EmbedPlayerFooter = ({ hasInitialized }: Props) => {
 
   return (
     <div className={footerClassName}>
-      <NavBarBrand height={17} href={`${PV.Config.WEB_BASE_URL}`} target='_blank' width={90} />
+      <NavBarBrand href={`${PV.Config.WEB_BASE_URL}`} target='_blank' />
       <div className='embed-player-footer-links'>
         <a
           className='embed-player-footer-link'

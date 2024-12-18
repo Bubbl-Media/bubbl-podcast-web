@@ -1,7 +1,8 @@
+import { faGithub } from '@fortawesome/free-brands-svg-icons'
 import { faSearch } from '@fortawesome/free-solid-svg-icons'
 import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
-import { NavBarBrand, NavBarLink } from '~/components'
+import { NavBarBrand, NavBarLink, Icon } from '~/components'
 import { PV } from '~/resources'
 import { eventNavBarLinkClicked } from '~/lib/utility/events'
 
@@ -12,8 +13,8 @@ export const NavBar = (props: Props) => {
   const { t } = useTranslation()
 
   return (
-    <nav className='navbar' style={{ backgroundColor: '#04081A' }}>
-      <NavBarBrand height={28} href={PV.RoutePaths.web.home} width={150} />
+    <nav className='navbar' style={{ backgroundColor: '#04081A', position: 'relative' }}>
+      <NavBarBrand href={PV.RoutePaths.web.home} />
       <NavBarLink
         active={router.pathname == PV.RoutePaths.web.search}
         faIconBeginning={faSearch}
@@ -29,6 +30,30 @@ export const NavBar = (props: Props) => {
           onClick={() => eventNavBarLinkClicked('podcasts')}
           text={t('Podcasts')}
         />
+      </div>
+      
+      <div style={{
+        position: 'absolute',
+        bottom: '20px',
+        left: 0,
+        right: 0,
+        display: 'flex',
+        justifyContent: 'center'
+      }}>
+        <a
+          href="https://github.com/Bubbl-Media/bubbl-podcast-web"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{
+            color: '#7FB5AA',
+            fontSize: '24px',
+            transition: 'color 0.2s ease'
+          }}
+          onMouseEnter={(e) => e.currentTarget.style.color = '#9FD5CA'}
+          onMouseLeave={(e) => e.currentTarget.style.color = '#7FB5AA'}
+        >
+          <Icon faIcon={faGithub} />
+        </a>
       </div>
     </nav>
   )

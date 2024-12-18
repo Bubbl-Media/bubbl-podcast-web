@@ -3,7 +3,6 @@ import { GetServerSideProps } from 'next'
 import { useTranslation } from 'next-i18next'
 import OmniAural, { useOmniAural } from 'omniaural'
 import type { Episode, MediaRef, Podcast } from 'podverse-shared'
-import { addLightningBoltToString, getLightningKeysendValueItem } from 'podverse-shared'
 import { useEffect, useRef, useState } from 'react'
 import {
   ClipListItem,
@@ -11,7 +10,6 @@ import {
   EpisodeListItem,
   List,
   LiveScheduleItem,
-  WebLNV4VForm,
   Meta,
   PageHeader,
   PageScrollableContent,
@@ -71,7 +69,7 @@ export default function Podcast({
 }: ServerProps) {
   /* Initialize */
 
-  const { id, value } = serverPodcast
+  const { id } = serverPodcast
   const { t } = useTranslation()
   const [filterPage, setFilterPage] = useState<number>(serverFilterPage)
   const [filterSearchText, setFilterSearchText] = useState<string>('')
@@ -84,47 +82,8 @@ export default function Podcast({
   const initialRender = useRef(true)
   const [userInfo] = useOmniAural('session.userInfo') as [OmniAuralState['session']['userInfo']]
   const pageCount = filterType === PV.Filters.type._episodes ? episodesPageCount : clipsPageCount
-  const valueTag = getLightningKeysendValueItem(value)
 
   /* useEffects */
-
-  useEffect(() => {
-    if (serverPodcast) {
-      setTimeout(() => {
-        OmniAural.v4vElementInfoSet({
-          podcastIndexPodcastId: serverPodcast.podcastIndexId,
-          episodeMediaUrl: null
-        })
-      }, 0)
-    }
-  }, [])
-
-  useEffect(() => {
-    ;(async () => {
-      try {
-        if (initialRender.current) {
-          initialRender.current = false
-        } else {
-          OmniAural.pageIsLoadingShow()
-          if (filterType === PV.Filters.type._episodes) {
-            const { data } = await clientQueryEpisodes()
-            const [newEpisodesListData, newEpisodesListCount] = data
-            setEpisodesListData(newEpisodesListData)
-            setEpisodesPageCount(calcListPageCount(newEpisodesListCount))
-          } else if (filterType === PV.Filters.type._clips) {
-            const { data } = await clientQueryClips()
-            const [newClipsListData, newClipsListCount] = data
-            setClipsListData(newClipsListData)
-            setClipsPageCount(calcListPageCount(newClipsListCount))
-          }
-        }
-      } catch (err) {
-        console.log(err)
-      }
-      OmniAural.pageIsLoadingHide()
-      scrollToTopOfPageScrollableContent()
-    })()
-  }, [filterPage, filterSearchText, filterSort, filterType])
 
   /* Client-Side Queries */
 
@@ -282,11 +241,6 @@ export default function Podcast({
               {serverLiveItemScheduleData.length > 0 && (
                 <SideContentSection headerText={t('Live Schedule')}>
                   {generateLiveScheduleItemListElements()}
-                </SideContentSection>
-              )}
-              {valueTag && (
-                <SideContentSection headerText={addLightningBoltToString(t('Value-4-Value'))}>
-                  <WebLNV4VForm podcast={serverPodcast} serverCookies={serverCookies} valueTag={valueTag} />
                 </SideContentSection>
               )}
             </SideContent>

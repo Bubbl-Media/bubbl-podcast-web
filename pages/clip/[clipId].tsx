@@ -19,8 +19,7 @@ import {
   Pagination,
   SideContent,
   SideContentSection,
-  Transcripts,
-  WebLNV4VForm
+  Transcripts
 } from '~/components'
 import { scrollToTopOfPageScrollableContent } from '~/components/PageScrollableContent/PageScrollableContent'
 import { calcListPageCount, prefixClipLabel } from '~/lib/utility/misc'
@@ -235,12 +234,7 @@ export default function Clip({
             <SideContent>
               {valueTag && (
                 <SideContentSection headerText={addLightningBoltToString(t('Value-4-Value'))}>
-                  <WebLNV4VForm
-                    episode={episode}
-                    podcast={episode.podcast}
-                    serverCookies={serverCookies}
-                    valueTag={valueTag}
-                  />
+                  {null}
                 </SideContentSection>
               )}
             </SideContent>

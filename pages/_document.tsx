@@ -20,6 +20,10 @@ class MyDocument extends Document {
           <link rel='preload' href='/fonts/Roboto/Roboto-Regular.ttf' as='font' crossOrigin='' />
           <link rel='preload' href='/fonts/Roboto/Roboto-Italic.ttf' as='font' crossOrigin='' />
           <link rel='preload' href='/fonts/Roboto/Roboto-Bold.ttf' as='font' crossOrigin='' />
+          <link 
+            href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;700&display=swap" 
+            rel="stylesheet"
+          />
         </Head>
         <body>
           <Main />

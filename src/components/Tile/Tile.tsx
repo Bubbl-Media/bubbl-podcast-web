@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next'
+
 type TileProps = {
   onClick: () => void
   title: string

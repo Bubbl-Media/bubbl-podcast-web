@@ -176,7 +176,6 @@ export default function Search({ serverCookies, serverSearchByText }: ServerProp
           pageCount={pageCount}
           show={podcastsListData?.length && pageCount > 1}
         />
-        <Footer />
       </PageScrollableContent>
     </>
   )

@@ -3,10 +3,8 @@ import { useTranslation } from 'next-i18next'
 import OmniAural, { useOmniAural } from 'omniaural'
 import type { Episode, MediaRef, PVComment, SocialInteraction } from 'podverse-shared'
 import {
-  addLightningBoltToString,
   checkIfHasSupportedCommentTag,
   checkIfVideoFileOrVideoLiveType,
-  getLightningKeysendValueItem
 } from 'podverse-shared'
 import { useEffect, useRef, useState } from 'react'
 import {
@@ -26,7 +24,6 @@ import {
   SideContent,
   SideContentSection,
   Transcripts,
-  WebLNV4VForm
 } from '~/components'
 import { scrollToTopOfPageScrollableContent } from '~/components/PageScrollableContent/PageScrollableContent'
 import { calcListPageCount } from '~/lib/utility/misc'
@@ -95,10 +92,6 @@ export default function EpisodePage({
   const hasValidCommentTag = checkIfHasSupportedCommentTag(serverEpisode)
   const hasChapters = serverChapters.length >= 1
   const hasChatRoom = !!liveItem?.chatIRCURL
-  const valueEpisode = serverEpisode.value?.length > 0 ? serverEpisode.value : null
-  const valuePodcast = serverEpisode.podcast.value?.length > 0 ? serverEpisode.podcast.value : null
-  const value = valueEpisode || valuePodcast
-  const valueTag = getLightningKeysendValueItem(value)
 
   /* useEffects */
 
@@ -243,16 +236,6 @@ export default function EpisodePage({
           }
           sideColumnChildren={
             <SideContent>
-              {valueTag && (
-                <SideContentSection headerText={addLightningBoltToString(t('Value-4-Value'))}>
-                  <WebLNV4VForm
-                    episode={serverEpisode}
-                    podcast={serverEpisode.podcast}
-                    serverCookies={serverCookies}
-                    valueTag={valueTag}
-                  />
-                </SideContentSection>
-              )}
             </SideContent>
           }
         />

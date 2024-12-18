@@ -2,6 +2,7 @@ import '../styles/index.scss'
 import '@fortawesome/fontawesome-svg-core/styles.css'
 import { config as fontAwesomeConfig } from '@fortawesome/fontawesome-svg-core'
 import { appWithTranslation } from 'next-i18next/dist/commonjs/appWithTranslation'
+import nextI18NextConfig from '../next-i18next.config.js'
 import { useRouter } from 'next/router'
 import Script from 'next/script'
 import OmniAural from 'omniaural'
@@ -215,4 +216,4 @@ function MyApp({ Component, pageProps }) {
   }
 }
 
-export default appWithTranslation(MyApp)
+export default appWithTranslation(MyApp, nextI18NextConfig)

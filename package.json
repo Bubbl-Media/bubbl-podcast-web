@@ -58,7 +58,7 @@
     "mermaid": "10.9.0",
     "moment": "2.29.4",
     "next": "12.3.4",
-    "next-i18next": "10.4.0",
+    "next-i18next": "^13.2.2",
     "nightwatch": "3.7.0",
     "omniaural": "1.3.3",
     "password-validator": "5.2.1",
@@ -70,7 +70,7 @@
     "react-draggable": "4.4.6",
     "react-draggable-list": "^4.1.0",
     "react-h5-audio-player": "3.8.1",
-    "react-i18next": "11.18.6",
+    "react-i18next": "^12.2.0",
     "react-modal": "3.14.4",
     "react-player": "2.10.1",
     "react-show-more-text": "1.5.2",
@@ -89,7 +89,7 @@
     "@testing-library/react": "12.1.2",
     "@testing-library/user-event": "13.5.0",
     "@types/node": "16.11.11",
-    "@types/react": "17.0.37",
+    "@types/react": "17.0.2",
     "@typescript-eslint/eslint-plugin": "5.6.0",
     "@typescript-eslint/parser": "5.5.0",
     "babel-jest": "27.4.6",
@@ -104,10 +104,7 @@
     "prettier": "2.5.0",
     "stylelint": "^15.10.1",
     "stylelint-config-recommended-scss": "^12.0.0",
-    "typescript": "4.5.2"
-  },
-  "resolutions": {
-    "@types/react": "17.0.37",
-    "@types/react-dom": "17.0.25"
+    "typescript": "4.5.2",
+    "@types/react-dom": "17.0.2"
   }
 }

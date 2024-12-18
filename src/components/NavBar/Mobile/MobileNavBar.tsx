@@ -38,13 +38,7 @@ export const MobileNavBar = (props: Props) => {
         </div>
         <div className='right-wrapper'>
           <div className='dropdown'>
-            <Dropdown
-              dropdownAriaLabel={t('My account')}
-              faIcon={userInfo ? faUserCircle : faUserCircleRegular}
-              onChange={(selected) => PV.NavBar.dropdownOnChange(selected, router, userInfo)}
-              options={dropdownItems}
-              text={userInfo?.name}
-            />
+
           </div>
           <PVLink
             className='search-button'

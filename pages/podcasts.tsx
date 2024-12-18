@@ -25,6 +25,7 @@ import { getCategoryById, getCategoryBySlug, getTranslatedCategories } from '~/s
 import { getPodcastsByQuery } from '~/services/podcast'
 import { getDefaultServerSideProps } from '~/services/serverSideHelpers'
 import { OmniAuralState } from '~/state/omniauralState'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
 interface ServerProps extends Page {
   serverCategoryId: string | null
@@ -414,6 +415,7 @@ export default function Podcasts({
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const { locale, query } = ctx
+  const i18nProps = await serverSideTranslations(locale, ['common'])
   const { category: categorySlug } = query
   const selectedCategory = getCategoryBySlug(categorySlug as string)
   const serverCategoryId = selectedCategory?.id || null
@@ -448,6 +450,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
   const serverProps: ServerProps = {
     ...defaultServerProps,
+    ...i18nProps,
     serverCategoryId,
     serverFilterFrom,
     serverFilterPage,

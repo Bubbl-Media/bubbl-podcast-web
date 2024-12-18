@@ -2,7 +2,7 @@ import { faDonate, faGlobe, faRss, faShare } from '@fortawesome/free-solid-svg-i
 import classNames from 'classnames'
 import OmniAural, { useOmniAural } from 'omniaural'
 import type { Episode, MediaRef, Podcast } from 'podverse-shared'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { generateAuthorText } from '~/lib/utility/author'
 import { generateCategoryNodes } from '~/lib/utility/category'
@@ -33,7 +33,8 @@ export const PodcastPageHeader = ({
   const { authors, categories, id } = podcast
   const authorEls = generateAuthorText(authors)
   const categoryEls = generateCategoryNodes(categories)
-  const isSubscribed = userInfo?.subscribedPodcastIds?.includes(id)
+  const [isLocallySubscribed, setIsLocallySubscribed] = useState<boolean>(false)
+  const isSubscribed = userInfo?.subscribedPodcastIds?.includes(id) || isLocallySubscribed
   const subscribedText = isSubscribed ? t('Unsubscribe') : t('Subscribe')
   const podcastTitle = podcast.title ? podcast.title : t('untitledPodcast')
   const podcastTitleLinkUrl = `${PV.RoutePaths.web.podcast}/${podcast.id}`
@@ -42,9 +43,33 @@ export const PodcastPageHeader = ({
   const imageUrl = getPodcastShrunkImageUrl(podcast)
   const [isSubscribing, setIsSubscribing] = useState<boolean>(false)
 
+  useEffect(() => {
+    const localSubs = localStorage.getItem('localSubscriptions')
+    if (localSubs) {
+      const subsArray = JSON.parse(localSubs)
+      setIsLocallySubscribed(subsArray.includes(id))
+    }
+  }, [id])
+
   const _toggleSubscribeToPodcast = async () => {
     setIsSubscribing(true)
-    await toggleSubscribeToPodcast(id, t)
+    
+    if (userInfo) {
+      await toggleSubscribeToPodcast(id, t)
+    } else {
+      const localSubs = localStorage.getItem('localSubscriptions')
+      let subsArray = localSubs ? JSON.parse(localSubs) : []
+      
+      if (isLocallySubscribed) {
+        subsArray = subsArray.filter((subId: string) => subId !== id)
+      } else {
+        subsArray.push(id)
+      }
+      
+      localStorage.setItem('localSubscriptions', JSON.stringify(subsArray))
+      setIsLocallySubscribed(!isLocallySubscribed)
+    }
+    
     setIsSubscribing(false)
   }
 

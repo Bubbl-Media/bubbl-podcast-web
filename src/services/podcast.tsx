@@ -6,7 +6,7 @@ type PodcastQueryParams = {
   hasVideo?: boolean
   maxResults?: boolean
   page?: number
-  podcastIds?: string[]
+  ids?: string[]
   searchBy?: string
   searchText?: string
   sort?: string
@@ -18,37 +18,37 @@ export const getPodcastsByQuery = async ({
   hasVideo,
   maxResults,
   page,
-  podcastIds,
+  ids,
   searchBy,
   searchText,
   sort,
   subscribed
 }: PodcastQueryParams) => {
+  if (ids?.length === 0) {
+    return { data: [[], 0] }
+  }
+
   const filteredQuery: PodcastQueryParams = {
+    ...(ids ? { ids } : {}),
     ...(categories ? { categories } : {}),
-    ...(podcastIds ? { podcastId: podcastIds } : {}),
-    // If no "from", then from defaults to _allKey
     ...(hasVideo ? { hasVideo } : {}),
     ...(maxResults ? { maxResults: true } : {}),
     ...(page ? { page } : { page: 1 }),
     ...(searchBy === PV.Filters.search.queryParams.podcast ? { searchTitle: encodeURIComponent(searchText) } : {}),
     ...(searchBy === PV.Filters.search.queryParams.host ? { searchAuthor: encodeURIComponent(searchText) } : {}),
-    ...(sort ? { sort } : {})
+    ...(sort ? { sort } : {}),
+    ...(subscribed ? { subscribed: true } : {})
   }
 
-  const endpoint = subscribed ? `${PV.RoutePaths.api.podcast}/subscribed` : PV.RoutePaths.api.podcast
+  const endpoint = PV.RoutePaths.api.podcast
 
-  if (podcastIds?.length === 0 || categories?.length === 0) {
-    return { data: [[], 0] }
-  } else {
-    const response = await request({
-      endpoint,
-      method: 'get',
-      query: filteredQuery
-    })
+  const response = await request({
+    endpoint,
+    method: 'get',
+    query: filteredQuery
+  })
 
-    return response
-  }
+  return response
 }
 
 export const getPodcastById = async (id: string) => {

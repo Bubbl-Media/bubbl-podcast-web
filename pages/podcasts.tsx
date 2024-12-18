@@ -80,12 +80,12 @@ export default function Podcasts({
   const pageCount = determinePageCount(filterPage, podcastsListData, podcastsListDataCount, !!filterSearchText)
   const isCategoryPage = !!router.query?.category
   const isCategoriesPage = filterFrom === PV.Filters.from._category && !isCategoryPage
-  const isLoggedInSubscribedPage = userInfo && filterFrom === PV.Filters.from._subscribed
   const selectedCategory = isCategoryPage ? getCategoryById(filterCategoryId) : null
   const pageHeaderText = selectedCategory ? `${t('Podcasts')} > ${selectedCategory.title}` : t('Podcasts')
-  const showLoginMessage = !userInfo && filterFrom === PV.Filters.from._subscribed
 
   const categories = getTranslatedCategories(t)
+
+  const [localSubscriptions, setLocalSubscriptions] = useState<string[]>([])
 
   /* useEffects */
 
@@ -140,6 +140,18 @@ export default function Podcasts({
     handleEffect()
   }, [filterQuery])
 
+  useEffect(() => {
+    const localSubs = localStorage.getItem('localSubscriptions')
+    if (localSubs) {
+      try {
+        const parsedSubs = JSON.parse(localSubs)
+        setLocalSubscriptions(parsedSubs)
+      } catch (e) {
+        console.error('Error parsing local subscriptions:', e)
+      }
+    }
+  }, [])
+
   /* Client-Side Queries */
 
   const clientQueryPodcasts = async () => {
@@ -177,15 +189,20 @@ export default function Podcasts({
   }
 
   const clientQueryPodcastsBySubscribed = async () => {
+    // Get all subscribed IDs
+    const allSubscribedIds = [
+      ...(userInfo?.subscribedPodcastIds || []),
+      ...localSubscriptions
+    ]
+
+    // Simple query with just the IDs we want
     const finalQuery = {
-      subscribed: true,
-      ...(filterPage ? { page: filterPage } : {}),
-      ...(filterSearchText ? { searchText: filterSearchText } : {}),
-      ...(filterSearchText ? { searchBy: PV.Filters.search.queryParams.podcast } : {}),
-      ...(filterSort ? { sort: filterSort } : {}),
-      ...(videoOnlyMode ? { hasVideo: true } : {})
+      ids: allSubscribedIds
     }
-    return getPodcastsByQuery(finalQuery)
+
+    // Get just those podcasts
+    const response = await getPodcastsByQuery(finalQuery)
+    return response
   }
 
   /* Function Helpers */
@@ -332,9 +349,9 @@ export default function Podcasts({
           videoOnlyMode={videoOnlyMode}
         />
         <PageScrollableContent 
-          noPaddingTop={showLoginMessage || isCategoryPage}
+          noPaddingTop={isCategoryPage}
         >
-          {!showLoginMessage && !isCategoryPage && (
+          {!isCategoryPage && (
             <SearchBarFilter
               eventType='podcasts'
               handleClear={_handleSearchClear}
@@ -359,21 +376,15 @@ export default function Podcasts({
               }}
             />
           )}
-          {showLoginMessage && (
-            <MessageWithAction
-              actionLabel={t('Login')}
-              actionOnClick={() => OmniAural.modalsLoginShow()}
-              message={t('LoginToSubscribeToPodcasts')}
-            />
-          )}
-          {(isLoggedInSubscribedPage || filterFrom === PV.Filters.from._all || isCategoryPage) && (
+          {(filterFrom === PV.Filters.from._subscribed || filterFrom === PV.Filters.from._all || isCategoryPage) && (
             <>
               <List
                 handleSelectByCategory={() => _handlePrimaryOnChange([PV.Filters.dropdownOptions.podcasts.from[2]])}
                 handleShowAllPodcasts={() => _handlePrimaryOnChange([PV.Filters.dropdownOptions.podcasts.from[0]])}
                 hideNoResultsMessage={isQuerying}
                 isSubscribedFilter={
-                  filterFrom === PV.Filters.from._subscribed && userInfo?.subscribedPodcastIds?.length === 0
+                  filterFrom === PV.Filters.from._subscribed && 
+                  (userInfo?.subscribedPodcastIds?.length === 0 && localSubscriptions.length === 0)
                 }
               >
                 {generatePodcastListElements(podcastsListData)}
@@ -430,6 +441,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
   let podcastsListData = []
   let podcastsListDataCount = 0
+  
   if (selectedCategory) {
     const response = await getPodcastsByQuery({
       categories: [serverCategoryId],
@@ -438,14 +450,11 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     })
     podcastsListData = response.data[0]
     podcastsListDataCount = response.data[1]
-  } else if (serverUserInfo) {
-    const response = await getPodcastsByQuery({
-      podcastIds: serverUserInfo?.subscribedPodcastIds,
-      sort: serverFilterSort,
-      hasVideo: serverGlobalFilters.videoOnlyMode
-    })
-    podcastsListData = response.data[0]
-    podcastsListDataCount = response.data[1]
+  } else if (serverFilterFrom === PV.Filters.from._subscribed) {
+    // We can't access localStorage on server, so just return empty array
+    // The client-side query will handle both user and local subscriptions
+    podcastsListData = []
+    podcastsListDataCount = 0
   }
 
   const serverProps: ServerProps = {

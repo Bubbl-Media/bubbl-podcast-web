@@ -76,7 +76,7 @@ export const Footer = () => {
     <footer className='footer' role='contentinfo'>
       <hr aria-hidden='true' />
       <div className='footer-top'>
-        <NavBarBrand height={28} href={PV.RoutePaths.web.home} width={150} />
+      <NavBarBrand href={PV.RoutePaths.web.home} />
         <div className='open-source-license'>
           <a href='https://www.gnu.org/licenses/agpl-3.0.en.html' target='_blank' rel='noreferrer'>
             {t('open source')} <Icon faIcon={faCopyrightRegular} rotation={180} />

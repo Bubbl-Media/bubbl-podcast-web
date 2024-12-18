@@ -29,7 +29,8 @@ const PAYPAL_CLIENT = {
 
 const EMAIL_CONTACT = getServerOrPublicVariable('EMAIL_CONTACT')
 
-const metaDefaultImageUrl1200x630 = 'https://podverse.fm/images/podverse-logo-1200x630.png'
+const SITE_NAME = 'Bubbl FM'
+const metaDefaultImageUrl1200x630 = '/images/bubbl-icon.png'
 
 const MATOMO_BASE_URL = getServerOrPublicVariable('MATOMO_BASE_URL')
 const MATOMO_ENDPOINT_PATH = getServerOrPublicVariable('MATOMO_ENDPOINT_PATH')
@@ -54,6 +55,7 @@ export const Config = {
   EMAIL: {
     CONTACT: EMAIL_CONTACT
   },
+  SITE_NAME,
   metaDefaultImageUrl1200x630,
   MATOMO_BASE_URL,
   MATOMO_ENDPOINT_PATH,

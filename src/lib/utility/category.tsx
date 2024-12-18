@@ -14,7 +14,7 @@ export const generateCategoryNodes = (categories) => {
       // const categoryHref = getLinkCategoryHref(category.id)
 
       categoryNodes.push(
-        <span key={`category-${i}`}>
+        <span key={`${i}`}>
           {/* <Link
             href={categoryHref}> */}
           <a>{categoryText}</a>

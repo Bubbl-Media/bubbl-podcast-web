@@ -2,23 +2,58 @@
   width: 15vw;
   height: 15vw;
   cursor: pointer;
-  border-radius: 5%;
-  background: linear-gradient(20deg, 
-    #04081A,  // Dark purple
-    #04081A,  // Dark purple
-    #04081A,  // Dark purple
-    #6ACAB7   // Teal
+  border-radius: 12px;
+  background: linear-gradient(135deg, 
+    #05091A 0%,
+    #05091A 50%,
+    rgba(106, 202, 183, 0.3) 100%
   );
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 20px;
   margin: 10px;
+  position: relative;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(106, 202, 183, 0.15);
+  box-shadow: 0 0 30px rgba(106, 202, 183, 0.05);
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 12px;
+    background: linear-gradient(135deg,
+      transparent 0%,
+      transparent 40%,
+      rgba(106, 202, 183, 0.2) 100%
+    );
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  &:hover {
+    transform: translateY(-2px);
+    border-color: rgba(106, 202, 183, 0.3);
+    box-shadow: 
+      0 0 30px rgba(106, 202, 183, 0.15),
+      0 0 60px rgba(106, 202, 183, 0.1);
+
+    &::before {
+      opacity: 1;
+    }
+  }
 }
 
 .tile-box-text {
   font-size: clamp(2vw, 26px, 18px);
   text-align: center;
+  font-weight: 300;
+  position: relative;
+  z-index: 1;
 
   @include themeGen() {
     color: getThemeVal('textPrimary');

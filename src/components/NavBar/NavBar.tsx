@@ -30,6 +30,12 @@ export const NavBar = (props: Props) => {
           onClick={() => eventNavBarLinkClicked('podcasts')}
           text={t('Podcasts')}
         />
+        <NavBarLink
+          active={router.pathname == '/inbox'}
+          href="https://bubbl.fm/inbox"
+          onClick={() => eventNavBarLinkClicked('podcasts')}
+          text={t('Bubbl Inbox')}
+        />
       </div>
       
       <div style={{

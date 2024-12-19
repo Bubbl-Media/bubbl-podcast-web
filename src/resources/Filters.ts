@@ -137,9 +137,9 @@ export const Filters = {
     },
     episodes: {
       from: [
-        { i18nKey: 'filter from - all', key: _all },
-        { i18nKey: 'filter from - subscribed', key: _subscribed },
-        { i18nKey: 'filter from - category', key: _category }
+        { i18nKey: 'All', key: _all },
+        { i18nKey: 'Subscribed', key: _subscribed },
+        { i18nKey: 'Category', key: _category }
       ],
       sort: {
         all: [
@@ -161,19 +161,19 @@ export const Filters = {
     },
     livestreams: {
       from: [
-        { i18nKey: 'filter from - all', key: _all },
-        { i18nKey: 'filter from - subscribed', key: _subscribed },
-        { i18nKey: 'filter from - category', key: _category }
+        { i18nKey: 'All', key: _all },
+        { i18nKey: 'Subscribed', key: _subscribed },
+        { i18nKey: 'Category', key: _category }
       ],
       status: [
-        { i18nKey: 'filter status - live now', key: _liveNow },
-        { i18nKey: 'filter status - scheduled', key: _liveScheduled }
+        { i18nKey: 'Live now', key: _liveNow },
+        { i18nKey: 'Scheduled', key: _liveScheduled }
       ]
     },
     podcast: {
       from: [
-        { i18nKey: 'filter from - episodes', key: _episodes },
-        { i18nKey: 'filter from - clips', key: _clips }
+        { i18nKey: 'Episodes', key: _episodes },
+        { i18nKey: 'Clips', key: _clips }
       ],
       sort: [
         { i18nKey: 'Recent', key: _mostRecent },
@@ -188,9 +188,9 @@ export const Filters = {
     },
     podcasts: {
       from: [
-        { i18nKey: 'filter from - all', key: _all },
-        { i18nKey: 'filter from - subscribed', key: _subscribed },
-        { i18nKey: 'filter from - category', key: _category }
+        { i18nKey: 'All', key: _all },
+        { i18nKey: 'Subscribed', key: _subscribed },
+        { i18nKey: 'Category', key: _category }
       ],
       sort: {
         all: [
@@ -214,9 +214,9 @@ export const Filters = {
     },
     profile: {
       types: [
-        { i18nKey: 'filter type - podcasts', key: _podcasts },
-        { i18nKey: 'filter type - clips', key: _clips },
-        { i18nKey: 'filter type - playlists', key: _playlists }
+        { i18nKey: 'Podcasts', key: _podcasts },
+        { i18nKey: 'Clips', key: _clips },
+        { i18nKey: 'Playlists', key: _playlists }
       ]
     }
   }

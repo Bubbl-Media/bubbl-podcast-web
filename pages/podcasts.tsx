@@ -282,7 +282,7 @@ export default function Podcasts({
   const meta = {
     currentUrl: serverIsHomePage ? PV.Config.WEB_BASE_URL : `${PV.Config.WEB_BASE_URL}${PV.RoutePaths.web.podcasts}`,
     description: t('pages-about_Description'),
-    title: serverIsHomePage ? t('pages-index_Title') : t('pages-podcasts_Title')
+    title: serverIsHomePage ? t('Podcast Category') : t('Podcast Category')
   }
 
   return (

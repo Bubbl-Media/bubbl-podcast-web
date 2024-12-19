@@ -7,6 +7,7 @@ type PodcastQueryParams = {
   maxResults?: boolean
   page?: number
   ids?: string[]
+  podcastIds?: string[]
   searchBy?: string
   searchText?: string
   sort?: string
@@ -19,16 +20,16 @@ export const getPodcastsByQuery = async ({
   maxResults,
   page,
   ids,
+  podcastIds,
   searchBy,
   searchText,
   sort,
   subscribed
 }: PodcastQueryParams) => {
-  if (ids?.length === 0) {
-    return { data: [[], 0] }
-  }
 
-  const filteredQuery: PodcastQueryParams = {
+  const query = {
+    ...(subscribed ? { subscribed: true } : {}),
+    ...(podcastIds ? { ids: podcastIds } : {}),
     ...(ids ? { ids } : {}),
     ...(categories ? { categories } : {}),
     ...(hasVideo ? { hasVideo } : {}),
@@ -36,19 +37,14 @@ export const getPodcastsByQuery = async ({
     ...(page ? { page } : { page: 1 }),
     ...(searchBy === PV.Filters.search.queryParams.podcast ? { searchTitle: encodeURIComponent(searchText) } : {}),
     ...(searchBy === PV.Filters.search.queryParams.host ? { searchAuthor: encodeURIComponent(searchText) } : {}),
-    ...(sort ? { sort } : {}),
-    ...(subscribed ? { subscribed: true } : {})
+    ...(sort ? { sort } : {})
   }
 
-  const endpoint = PV.RoutePaths.api.podcast
-
-  const response = await request({
-    endpoint,
+  return request({
+    endpoint: PV.RoutePaths.api.podcast,
     method: 'get',
-    query: filteredQuery
+    query
   })
-
-  return response
 }
 
 export const getPodcastById = async (id: string) => {

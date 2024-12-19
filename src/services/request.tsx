@@ -22,9 +22,15 @@ export const request = async (req: PVRequest) => {
 
     const queryString = Object.keys(query)
       .map((key) => {
-        return `${key}=${query[key]}`
+        const value = query[key]
+        if (Array.isArray(value)) {
+          return `${key}=${value.join(',')}`
+        }
+        return `${key}=${value}`
       })
       .join('&')
+
+    console.log('🔍 Final URL:', `${PV.Config.API_BASE_URL}${endpoint}?${queryString}`)
 
     const axiosRequest = {
       timeout: timeout || 30000,
@@ -39,7 +45,7 @@ export const request = async (req: PVRequest) => {
     const response = await axios(axiosRequest)
     return response
   } catch (error) {
-    if (error && error.response && error.response.status === 429) {
+    if (error?.response?.status === 429) {
       alertRateLimitError(error)
     } else {
       throw error

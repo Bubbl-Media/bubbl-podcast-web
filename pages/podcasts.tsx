@@ -189,20 +189,10 @@ export default function Podcasts({
   }
 
   const clientQueryPodcastsBySubscribed = async () => {
-    // Get all subscribed IDs
-    const allSubscribedIds = [
-      ...(userInfo?.subscribedPodcastIds || []),
-      ...localSubscriptions
-    ]
-
-    // Simple query with just the IDs we want
-    const finalQuery = {
-      ids: allSubscribedIds
-    }
-
-    // Get just those podcasts
-    const response = await getPodcastsByQuery(finalQuery)
-    return response
+    return getPodcastsByQuery({
+      subscribed: true,
+      maxResults: true
+    })
   }
 
   /* Function Helpers */

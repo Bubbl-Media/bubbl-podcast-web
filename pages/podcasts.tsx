@@ -282,7 +282,7 @@ export default function Podcasts({
   const meta = {
     currentUrl: serverIsHomePage ? PV.Config.WEB_BASE_URL : `${PV.Config.WEB_BASE_URL}${PV.RoutePaths.web.podcasts}`,
     description: t('Listen to your favorite podcasts with Bubbl FM'),
-    title: serverIsHomePage ? t('Podcast Category') : t('Podcast Category')
+    title: serverIsHomePage ? t('Bubbl FM') : t('Bubbl FM - Podcasts')
   }
 
   return (

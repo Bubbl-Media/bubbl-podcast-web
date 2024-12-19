@@ -86,6 +86,7 @@ export default function Podcasts({
   const categories = getTranslatedCategories(t)
 
   const [localSubscriptions, setLocalSubscriptions] = useState<string[]>([])
+  const [showLoginIframe, setShowLoginIframe] = useState(false)
 
   /* useEffects */
 
@@ -152,6 +153,30 @@ export default function Podcasts({
     }
   }, [])
 
+  useEffect(() => {
+    const handleMessage = (event: MessageEvent) => {
+      // Make sure message is from bubbl.fm
+      if (event.origin !== "https://bubbl.fm") return;
+      
+      // Check if the message indicates successful login
+      if (event.data?.type === "LOGIN_SUCCESS") {
+        setShowLoginIframe(false)
+        
+        // Update filter query to show subscribed podcasts
+        setFilterQuery({
+          ...filterQuery,
+          filterCategoryId: null,
+          filterFrom: PV.Filters.from._subscribed,
+          filterPage: 1,
+          filterSort: PV.Filters.sort._mostRecent
+        })
+      }
+    }
+
+    window.addEventListener("message", handleMessage)
+    return () => window.removeEventListener("message", handleMessage)
+  }, [filterQuery])
+
   /* Client-Side Queries */
 
   const clientQueryPodcasts = async () => {
@@ -198,8 +223,14 @@ export default function Podcasts({
   /* Function Helpers */
 
   const _handlePrimaryOnChange = (selectedItems: any[]) => {
-    router.push(`${PV.RoutePaths.web.podcasts}`)
     const selectedItem = selectedItems[0]
+    
+    if (selectedItem.key === PV.Filters.from._subscribed) {
+      setShowLoginIframe(true)
+      return
+    }
+
+    router.push(`${PV.RoutePaths.web.podcasts}`)
     let newPage = filterPage
     let newSort = filterSort
     if (selectedItem.key !== filterFrom) newPage = 1
@@ -391,6 +422,56 @@ export default function Podcasts({
             </>
           )}
         </PageScrollableContent>
+        
+        {showLoginIframe && (
+          <div style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            backgroundColor: 'rgba(0, 0, 0, 0.7)',
+            zIndex: 1000,
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center'
+          }}>
+            <div style={{
+              position: 'relative',
+              width: '90%',
+              maxWidth: '600px',
+              height: '80vh',
+              backgroundColor: '#fff',
+              borderRadius: '8px',
+              overflow: 'hidden'
+            }}>
+              <button 
+                onClick={() => setShowLoginIframe(false)}
+                style={{
+                  position: 'absolute',
+                  top: '10px',
+                  right: '10px',
+                  zIndex: 1001,
+                  background: 'none',
+                  border: 'none',
+                  cursor: 'pointer',
+                  fontSize: '24px',
+                  color: '#000'
+                }}
+              >
+                ×
+              </button>
+              <iframe
+                src="https://bubbl.fm/login"
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  border: 'none'
+                }}
+              />
+            </div>
+          </div>
+        )}
       </div>
     </>
   )

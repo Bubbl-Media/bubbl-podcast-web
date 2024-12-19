@@ -34,6 +34,10 @@
         padding: 13px 0;
         margin: -13px 0;
       }
+
+      @media (max-width: 768px) {
+        display: none;
+      }
     }
 
     .right-wrapper {
@@ -52,6 +56,10 @@
         svg {
           height: 22px;
           width: unset;
+        }
+
+        @media (max-width: 768px) {
+          display: none;
         }
       }
     }

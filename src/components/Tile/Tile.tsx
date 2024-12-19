@@ -7,8 +7,24 @@ type TileProps = {
 
 export const Tile = ({ title, onClick }: TileProps) => {
   return (
-    <li role='button' tabIndex={0} aria-label={title} className='tile-box' onClick={onClick}>
-      <h1 aria-hidden='true' className='tile-box-text'>
+    <li 
+      role='button' 
+      tabIndex={0} 
+      aria-label={title} 
+      className='tile-box' 
+      onClick={onClick}
+    >
+      <h1 
+        aria-hidden='true' 
+        className='tile-box-text'
+        style={{ 
+          fontFamily: 'Prompt',
+          background: 'linear-gradient(45deg, #7FB5AA, #A8E6CF)',
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+          backgroundClip: 'text'
+        }}
+      >
         {title}
       </h1>
     </li>

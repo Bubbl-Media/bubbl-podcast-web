@@ -305,22 +305,6 @@ export default function Podcasts({
         flexDirection: 'column'
       }}>
         <PageHeader
-          handleVideoOnlyModeToggle={(newStateVal) => {
-            OmniAural.setGlobalFiltersVideoOnlyMode(newStateVal)
-            setFilterQuery({
-              ...filterQuery,
-              videoOnlyMode: newStateVal
-            })
-            const globalFilters = cookies.globalFilters || {}
-            setCookie(
-              'globalFilters',
-              {
-                ...globalFilters,
-                videoOnlyMode: newStateVal
-              },
-              { path: PV.Cookies.path }
-            )
-          }}
           noMarginBottom={
             (filterFrom !== PV.Filters.from._category && !!podcastsListDataCount) ||
             (isCategoryPage && filterFrom === PV.Filters.from._category)

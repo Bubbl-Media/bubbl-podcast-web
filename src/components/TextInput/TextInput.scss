@@ -10,22 +10,17 @@
 
   .text-input-outer-wrapper {
     align-items: center;
-    border-color: transparent;
-    border-radius: $item-border-radius !important;
-    border-style: solid;
-    border-width: $border-width-default;
+    border: none;
+    border-radius: 12px !important;
     display: flex;
     flex-direction: row;
-    padding: 10px 16px;
-
-    @include themeGen() {
-      background-color: getThemeVal('textInputBackground') !important;
-    }
+    padding: 12px 20px;
+    background-color: hsl(228 67% 4%) !important;
+    transition: all 0.2s ease;
 
     &:focus-within {
-      @include themeGen() {
-        border-color: getThemeVal('textInputFocusBorder');
-      }
+      background-color: hsl(228 67% 5%) !important;
+      box-shadow: 0 0 0 2px rgba(123, 197, 175, 0.1);
     }
 
     .icon-wrapper {
@@ -33,6 +28,7 @@
       align-items: center;
       display: flex;
       margin-right: 24px;
+      color: #7BC5AF;
 
       &:last-child {
         margin-right: -16px;
@@ -44,39 +40,25 @@
       }
     }
 
-    .end-button {
-      margin: 0 0 0 12px;
-    }
-
     .text-input-inner-wrapper {
       display: flex;
       flex: 1;
       flex-direction: column;
-      height: 42px;
-
-      .eyebrow {
-        font-size: $text-sm;
-        font-weight: $font-weight-bold;
-        margin: 0 0 2px 0;
-
-        @include themeGen() {
-          color: getThemeVal('textInputEyebrow') !important;
-        }
-      }
 
       input {
         font-size: $text-lg;
         height: 42px;
-
+        background: transparent;
+        border: none;
+        color: #FFFFFF;
+        
         &::placeholder {
-          @include themeGen() {
-            color: getThemeVal('textInputPlaceholder');
-          }
+          color: rgba(255, 255, 255, 0.5);
         }
-      }
 
-      .eyebrow + input {
-        height: 24px;
+        &:focus {
+          outline: none;
+        }
       }
     }
   }

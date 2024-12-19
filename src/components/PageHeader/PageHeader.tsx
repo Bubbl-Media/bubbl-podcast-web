@@ -53,6 +53,7 @@ export const PageHeader = ({
   const { t } = useTranslation()
   const wrapperClass = classnames(
     'page-header',
+    'bg-background',
     isSubHeader ? 'sub-header' : '',
     noMarginBottom ? 'no-margin-bottom' : ''
   )
@@ -73,7 +74,7 @@ export const PageHeader = ({
   return (
     <>
       <div className={wrapperClass}>
-        <div className='main-max-width'>
+        <div className='main-max-width bg-background'>
           <DivClickable className='page-header-title-wrapper' onClick={handleCollapse} role={divClickableRole}>
             {!isSubHeader && (
               <h1 aria-label={h1AriaLabel} tabIndex={h1TabIndex}>

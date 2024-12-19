@@ -1,9 +1,6 @@
 .page-header {
   border-radius: 0;
-
-  @include themeGen() {
-    background-color: getThemeVal('backgroundTertiary');
-  }
+  background-color: hsl(var(--background));
 
   .page-header-title-wrapper {
     margin-right: 8px;

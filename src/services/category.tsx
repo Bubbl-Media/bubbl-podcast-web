@@ -13,7 +13,7 @@ export const getTranslatedCategories = (t: any) => {
     const translatedCategory = {
       id: category.id,
       slug: category.slug,
-      title: t(`category - ${category.slug}`)
+      title: t(`${category.slug}`).charAt(0).toUpperCase() + t(`${category.slug}`).slice(1)
     }
     translatedCategories.push(translatedCategory)
   }

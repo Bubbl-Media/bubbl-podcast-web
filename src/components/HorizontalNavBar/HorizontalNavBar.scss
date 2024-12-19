@@ -1,7 +1,5 @@
 .horizontal-navbar-wrapper {
-  @include themeGen() {
-    background-color: getThemeVal('backgroundTertiary');
-  }
+  background-color: hsl(228 67% 6%);
 
   .navbar-secondary {
     align-items: center;

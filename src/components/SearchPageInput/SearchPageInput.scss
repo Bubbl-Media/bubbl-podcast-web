@@ -2,7 +2,7 @@
   padding: 24px 0 18px 0;
 
   @include themeGen() {
-    background-color: getThemeVal('backgroundTertiary');
+    background-color: hsl(var(--background)) !important;
   }
 
   .text-input {

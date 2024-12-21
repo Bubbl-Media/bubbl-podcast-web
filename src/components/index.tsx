@@ -14,6 +14,7 @@ export { ComparisonTable } from './ComparisonTable/ComparisonTable'
 export { DivClickable } from './DivClickable/DivClickable'
 export { DownloadAppButtons } from './DownloadAppButtons/DownloadAppButtons'
 export { Dropdown } from './Dropdown/Dropdown'
+export { WaveBackground } from './WaveBackground/WaveBackground'
 export {
   EmbedPlayerFooter,
   EmbedPlayerHeader,

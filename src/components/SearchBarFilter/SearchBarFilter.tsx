@@ -13,6 +13,8 @@ type Props = {
   placeholder: string
   rounded?: boolean
   smaller?: boolean
+  wrapperClassName?: string
+  containerClassName?: string
 }
 
 export const SearchBarFilter = ({
@@ -23,7 +25,9 @@ export const SearchBarFilter = ({
   includeBottomPadding,
   placeholder,
   rounded = false,
-  smaller
+  smaller,
+  wrapperClassName,
+  containerClassName
 }: Props) => {
   const [searchText, setSearchText] = useState<string>('')
   const wrapperClass = classNames(
@@ -68,7 +72,7 @@ export const SearchBarFilter = ({
   }
 
   return (
-    <div className={wrapperClass}>
+    <div className={classNames(wrapperClass, wrapperClassName)}>
       <TextInput
         faIcon={faSearch}
         handleEndButtonClearButtonClick={searchText && _handleClear}

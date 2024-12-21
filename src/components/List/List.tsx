@@ -3,16 +3,13 @@ import { useTranslation } from 'react-i18next'
 import { PV } from '~/resources'
 import { FeatureDemoWidget, PVLink } from '..'
 
-type Props = {
-  children: any
-  handleSelectByCategory?: any
-  handleShowAllPodcasts?: any
+interface ListProps {
+  children: React.ReactNode
+  handleSelectByCategory?: () => void
+  handleShowAllPodcasts?: () => void
   hideNoResultsMessage?: boolean
-  isDraggable?: boolean
   isSubscribedFilter?: boolean
-  tutorialsLink?: string
-  tutorialsLinkText?: string
-  listRef?: React.RefObject<HTMLUListElement>
+  className?: string
 }
 
 export const List = ({
@@ -20,16 +17,13 @@ export const List = ({
   handleSelectByCategory,
   handleShowAllPodcasts,
   hideNoResultsMessage,
-  isDraggable,
   isSubscribedFilter,
-  tutorialsLink,
-  tutorialsLinkText,
-  listRef
-}: Props) => {
+  className
+}: ListProps) => {
   const { t } = useTranslation()
-  const hasChildren = children?.length > 0 || (isDraggable && children?.props?.list?.length > 0)
+  const hasChildren = children !== null && children !== undefined
   const showNoResultsFound = !hideNoResultsMessage && !hasChildren
-  const listClass = classNames('list')
+  const listClass = classNames('list', className)
 
   const noResultsTextNode = isSubscribedFilter ? (
     <div className='no-results-found-message'>
@@ -47,19 +41,13 @@ export const List = ({
   ) : (
     <div className='no-results-found-message' tabIndex={0}>
       {t('No results found')}
-      {!!tutorialsLink && !!tutorialsLinkText && (
-        <FeatureDemoWidget tutorialsLink={tutorialsLink} tutorialsLinkText={tutorialsLinkText} />
-      )}
     </div>
   )
 
   return (
-    <ul className={listClass} ref={listRef}>
+    <div className={listClass}>
       {showNoResultsFound && noResultsTextNode}
       {hasChildren && children}
-      {!showNoResultsFound && !!tutorialsLink && !!tutorialsLinkText && (
-        <FeatureDemoWidget marginTopExtra tutorialsLink={tutorialsLink} tutorialsLinkText={tutorialsLinkText} />
-      )}
-    </ul>
+    </div>
   )
 }

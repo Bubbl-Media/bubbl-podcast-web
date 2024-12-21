@@ -1,15 +1,22 @@
 import classNames from 'classnames'
 
 type Props = {
-  children: any
+  children: React.ReactNode
+  className?: string
+  style?: React.CSSProperties
   noPaddingTop?: boolean
 }
 
-export const PageScrollableContent = ({ children, noPaddingTop }: Props) => {
+export const PageScrollableContent = ({
+  children,
+  className,
+  style,
+  noPaddingTop
+}: Props) => {
   const innerContentClassName = classNames('inner-content main-max-width', noPaddingTop ? 'no-padding-top' : '')
 
   return (
-    <div className='page-scrollable-content'>
+    <div className={className} style={style}>
       <div className={innerContentClassName}>{children}</div>
     </div>
   )

@@ -4,6 +4,7 @@ import { useRouter } from 'next/router'
 import OmniAural, { useOmniAural, useOmniAuralEffect } from 'omniaural'
 import type { Podcast } from 'podverse-shared'
 import { useEffect, useRef, useState } from 'react'
+import { WaveBackground } from '~/components'
 import { useCookies } from 'react-cookie'
 import {
   List,
@@ -390,23 +391,15 @@ export default function Podcasts({
 
   return (
     <>
-      <Meta
-        description={meta.description}
-        ogDescription={meta.description}
-        ogTitle={meta.title}
-        ogType='website'
-        ogUrl={meta.currentUrl}
-        robotsNoIndex={false}
-        title={meta.title}
-        twitterDescription={meta.description}
-        twitterTitle={meta.title}
-      />
-      <div style={{ 
-        backgroundColor: '#04081A',
-        height: '100vh',
-        display: 'flex',
-        flexDirection: 'column'
-      }}>
+      <Meta {...meta} />
+      
+      {/* Background */}
+      <div className="fixed inset-0 -z-10">
+        <WaveBackground />
+      </div>
+
+      {/* Main content */}
+      <div className="relative z-10">
         <PageHeader
           noMarginBottom={
             (filterFrom !== PV.Filters.from._category && !!podcastsListDataCount) ||
@@ -429,119 +422,134 @@ export default function Podcasts({
             zIndex: 1000,
             width: '100%',
             maxWidth: '200px',
-            backgroundColor: '#04081A',
+            backgroundColor: 'rgba(4, 8, 26, 0.7)',
             borderRadius: '8px',
             boxShadow: '0 2px 10px rgba(0,0,0,0.3)',
             marginTop: '4px'
           }}
         />
         <PageScrollableContent 
-          noPaddingTop={isCategoryPage}
+          className="bg-transparent"
         >
-          {!isCategoryPage && (
-            <SearchBarFilter
-              eventType='podcasts'
-              handleClear={_handleSearchClear}
-              handleSubmit={_handleSearchSubmit}
-              includeBottomPadding={isCategoriesPage}
-              placeholder={t('Search podcasts')}
-              rounded={true}
-            />
-          )}
-          {isCategoriesPage && (
-            <Tiles
-              groupAriaLabel={t('Categories')}
-              items={categories}
-              onClick={(id: string) => {
-                setFilterQuery({
-                  ...filterQuery,
-                  filterCategoryId: id,
-                  filterPage: 1
-                })
-                const selectedCategory = getCategoryById(id)
-                router.push(`${PV.RoutePaths.web.podcasts}?category=${selectedCategory.slug}`)
-              }}
-            />
-          )}
-          {(filterFrom === PV.Filters.from._subscribed || filterFrom === PV.Filters.from._all || isCategoryPage) && (
-            <>
-              <List
-                handleSelectByCategory={() => _handlePrimaryOnChange([PV.Filters.dropdownOptions.podcasts.from[2]])}
-                handleShowAllPodcasts={() => _handlePrimaryOnChange([PV.Filters.dropdownOptions.podcasts.from[0]])}
-                hideNoResultsMessage={isQuerying}
-                isSubscribedFilter={
-                  filterFrom === PV.Filters.from._subscribed && 
-                  (userInfo?.subscribedPodcastIds?.length === 0 && localSubscriptions.length === 0)
-                }
-              >
-                {generatePodcastListElements(podcastsListData)}
-              </List>
-              <Pagination
-                currentPageIndex={filterPage}
-                handlePageNavigate={(newPage) =>
+          <div className="space-y-4">
+            {!isCategoryPage && (
+              <SearchBarFilter
+                eventType='podcasts'
+                handleClear={_handleSearchClear}
+                handleSubmit={_handleSearchSubmit}
+                includeBottomPadding={isCategoriesPage}
+                placeholder={t('Search podcasts')}
+                rounded={true}
+                wrapperClassName="bg-slate-900/50"
+                containerClassName="bg-slate-900/50"
+              />
+            )}
+            {isCategoriesPage && (
+              <Tiles
+                groupAriaLabel={t('Categories')}
+                items={categories}
+                onClick={(id: string) => {
                   setFilterQuery({
                     ...filterQuery,
-                    filterPage: newPage
+                    filterCategoryId: id,
+                    filterPage: 1
                   })
-                }
-                handlePageNext={() => {
-                  if (filterPage + 1 <= pageCount)
-                    setFilterQuery({
-                      ...filterQuery,
-                      filterPage: filterPage + 1
-                    })
-                }}
-                handlePagePrevious={() => {
-                  if (filterPage - 1 > 0)
-                    setFilterQuery({
-                      ...filterQuery,
-                      filterPage: filterPage - 1
-                    })
-                }}
-                pageCount={pageCount}
-                show={pageCount > 1}
-              />
-            </>
-          )}
-        </PageScrollableContent>
-        
-        {showLoginIframe && (
-          <div style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100%',
-            backgroundColor: 'rgba(0, 0, 0, 0.7)',
-            zIndex: 1000,
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center'
-          }}>
-            <div style={{
-              position: 'relative',
-              width: '90%',
-              maxWidth: '600px',
-              height: '80vh',
-              backgroundColor: '#04081A',
-              borderRadius: '8px',
-              overflow: 'hidden'
-            }}>
-              <iframe
-                src={process.env.NODE_ENV === 'development' 
-                  ? "http://localhost:3000/login"
-                  : "https://bubbl.fm/login"
-                }
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  border: 'none'
+                  const selectedCategory = getCategoryById(id)
+                  router.push(`${PV.RoutePaths.web.podcasts}?category=${selectedCategory.slug}`)
                 }}
               />
-            </div>
+            )}
+            {(filterFrom === PV.Filters.from._subscribed || filterFrom === PV.Filters.from._all || isCategoryPage) && (
+              <>
+                <List
+                  handleSelectByCategory={() => _handlePrimaryOnChange([PV.Filters.dropdownOptions.podcasts.from[2]])}
+                  handleShowAllPodcasts={() => _handlePrimaryOnChange([PV.Filters.dropdownOptions.podcasts.from[0]])}
+                  hideNoResultsMessage={isQuerying}
+                  isSubscribedFilter={
+                    filterFrom === PV.Filters.from._subscribed && 
+                    (userInfo?.subscribedPodcastIds?.length === 0 && localSubscriptions.length === 0)
+                  }
+                  className="space-y-2"
+                >
+                  {podcastsListData.map((podcast, index) => (
+                    <div key={`${keyPrefix}-${index}-${podcast?.id}`} 
+                      className="bg-slate-900/50 backdrop-blur-sm rounded-lg"
+                    >
+                      <PodcastListItem 
+                        podcast={podcast} 
+                        serverCookies={serverCookies}
+                      />
+                    </div>
+                  ))}
+                </List>
+                <Pagination
+                  currentPageIndex={filterPage}
+                  handlePageNavigate={(newPage) =>
+                    setFilterQuery({
+                      ...filterQuery,
+                      filterPage: newPage
+                    })
+                  }
+                  handlePageNext={() => {
+                    if (filterPage + 1 <= pageCount)
+                      setFilterQuery({
+                        ...filterQuery,
+                        filterPage: filterPage + 1
+                      })
+                  }}
+                  handlePagePrevious={() => {
+                    if (filterPage - 1 > 0)
+                      setFilterQuery({
+                        ...filterQuery,
+                        filterPage: filterPage - 1
+                      })
+                  }}
+                  pageCount={pageCount}
+                  show={pageCount > 1}
+                />
+              </>
+            )}
           </div>
-        )}
+        </PageScrollableContent>
       </div>
+
+      {/* Login iframe */}
+      {showLoginIframe && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          backgroundColor: 'rgba(0, 0, 0, 0.7)',
+          zIndex: 1000,
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center'
+        }}>
+          <div style={{
+            position: 'relative',
+            width: '90%',
+            maxWidth: '600px',
+            height: '80vh',
+            backgroundColor: '#04081A',
+            borderRadius: '8px',
+            overflow: 'hidden'
+          }}>
+            <iframe
+              src={process.env.NODE_ENV === 'development' 
+                ? "http://localhost:3000/login"
+                : "https://bubbl.fm/login"
+              }
+              style={{
+                width: '100%',
+                height: '100%',
+                border: 'none'
+              }}
+            />
+          </div>
+        </div>
+      )}
     </>
   )
 }

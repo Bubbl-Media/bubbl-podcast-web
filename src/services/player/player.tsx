@@ -39,6 +39,7 @@ import {
   videoSetPlaybackSpeed,
   videoUnmute
 } from './playerVideo'
+import { Router } from 'next/router'
 
 const parsePlayerSettingsCookie = (playerSettingsString: string) => {
   let playerSettings = null
@@ -430,4 +431,39 @@ export const playerPlayNextFromQueue = async () => {
     const shouldPlay = true
     playerLoadNowPlayingItem(nextNowPlayingItem, shouldPlay)
   }
+}
+
+export const initializePlayerRouteHandling = () => {
+  Router.events.on('routeChangeStart', () => {
+    // Save current state before route change
+    const currentNowPlayingItem = OmniAural.state.player.currentNowPlayingItem.value()
+    const currentPosition = playerGetPosition()
+    const isPlaying = !OmniAural.state.player.paused.value()
+    
+    if (currentNowPlayingItem) {
+      // Save to localStorage to persist across route changes
+      localStorage.setItem('playerState', JSON.stringify({
+        nowPlayingItem: currentNowPlayingItem,
+        position: currentPosition,
+        isPlaying
+      }))
+    }
+  })
+
+  Router.events.on('routeChangeComplete', () => {
+    // Restore state after route change
+    const savedState = localStorage.getItem('playerState')
+    if (savedState) {
+      const { nowPlayingItem, position, isPlaying } = JSON.parse(savedState)
+      
+      unstable_batchedUpdates(() => {
+        if (nowPlayingItem) {
+          playerLoadNowPlayingItem(nowPlayingItem, isPlaying)
+          if (position) {
+            playerSeekTo(position)
+          }
+        }
+      })
+    }
+  })
 }

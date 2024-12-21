@@ -21,12 +21,15 @@ import {
   PlayerAPI,
   MobileNavBar,
   V4VHiddenElement,
-  ToastsHandler
+  ToastsHandler,
+
 } from '~/components'
 import '~/state'
+import { PersistentAudioPlayer } from '../components/PersistentAudioPlayer'
 import { initialState } from '~/state/omniauralState'
 import {
   playerInitializeSettings,
+  initializePlayerRouteHandling,
   playerLoadNowPlayingItem,
   saveCurrentPlaybackPositionToHistory
 } from '~/services/player/player'
@@ -120,6 +123,7 @@ function MyApp({ Component, pageProps }) {
       resetHeight()
 
       if (!doNotInheritAppComponent) {
+        initializePlayerRouteHandling()
         playerInitializeSettings(pageProps.serverCookies)
         const nowPlayingItem = await getNowPlayingItemOnServer()
         const currentNowPlayingItem = OmniAural.state.player.currentNowPlayingItem.value()
@@ -208,6 +212,7 @@ function MyApp({ Component, pageProps }) {
               <MobilePlayer />
               <PlayerAPI />
               <ToastsHandler />
+              <PersistentAudioPlayer />
             </div>
           </ToastProvider>
         </CookiesProvider>

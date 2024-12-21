@@ -139,6 +139,13 @@ export type OmniAuralState = {
   userQueueItems: []
   v4vElementInfo: null | { podcastIndexPodcastId: number; episodeMediaUrl: string }
   v4vBoostResults: V4VBoostResults | null
+  audioPlayer: {
+    isPlaying: boolean
+    currentPodcast: null | { podcastIndexPodcastId: number }
+    currentEpisode: null | { episodeMediaUrl: string }
+    currentTime: number
+    duration: number
+  }
 }
 
 export const initialState: OmniAuralState = {
@@ -236,5 +243,12 @@ export const initialState: OmniAuralState = {
   },
   userQueueItems: [],
   v4vElementInfo: null,
-  v4vBoostResults: null
+  v4vBoostResults: null,
+  audioPlayer: {
+    isPlaying: false,
+    currentPodcast: null,
+    currentEpisode: null,
+    currentTime: 0,
+    duration: 0
+  }
 }

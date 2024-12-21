@@ -26,7 +26,7 @@ import { getPodcastsByQuery } from '~/services/podcast'
 import { getDefaultServerSideProps } from '~/services/serverSideHelpers'
 import { OmniAuralState } from '~/state/omniauralState'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import { getFirebaseApp } from '~/services/firebase'
+import { getFirebaseApp } from '../src/services/firebase'
 import { 
   collection, 
   doc, 

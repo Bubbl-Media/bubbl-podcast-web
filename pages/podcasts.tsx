@@ -113,7 +113,7 @@ export default function Podcasts({
   const isCategoryPage = !!router.query?.category
   const isCategoriesPage = filterFrom === PV.Filters.from._category && !isCategoryPage
   const selectedCategory = isCategoryPage ? getCategoryById(filterCategoryId) : null
-  const pageHeaderText = selectedCategory ? `${t('Podcasts')} > ${selectedCategory.title}` : t('Podcasts')
+  const pageHeaderText = selectedCategory ? selectedCategory.title : ''
 
   const categories = getTranslatedCategories(t)
 
@@ -330,6 +330,10 @@ export default function Podcasts({
       
       if (!currentUser) {
         setIsBubblFmAuthenticated(false)
+        // Redirect to login page
+        window.location.href = process.env.NODE_ENV === 'development' 
+          ? 'http://localhost:3000/login'
+          : 'https://bubbl.fm/login'
         return
       }
 
@@ -350,13 +354,19 @@ export default function Podcasts({
         setIsBubblFmAuthenticated(data.isAuthenticated)
         
         if (!data.isAuthenticated) {
-          setShowLoginIframe(true)
+          // Redirect to login page
+          window.location.href = process.env.NODE_ENV === 'development' 
+            ? 'http://localhost:3000/login'
+            : 'https://bubbl.fm/login'
         }
       }
     } catch (error) {
       console.error('Error checking auth status:', error)
       setIsBubblFmAuthenticated(false)
-      setShowLoginIframe(true)
+      // Redirect to login page on error
+      window.location.href = process.env.NODE_ENV === 'development' 
+        ? 'http://localhost:3000/login'
+        : 'https://bubbl.fm/login'
     }
   }
 
@@ -463,7 +473,7 @@ export default function Podcasts({
       <div className="flex flex-col flex-grow h-full">
         <div className="flex items-center justify-between p-4">
           <NavArrows />
-          <h1 className="text-4xl font-light">Podcasts</h1>
+          <h1 className="text-4xl font-bold absolute left-1/2 transform -translate-x-1/2">Podcasts</h1>
           {/* Your filter dropdowns */}
         </div>
         

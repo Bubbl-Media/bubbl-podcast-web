@@ -47,6 +47,7 @@ body {
     flex-direction: row;
     flex: 1;
     overflow: auto;
+    background: transparent;
   }
 
   .app-main-wrapper {
@@ -54,6 +55,7 @@ body {
     flex: 1;
     flex-direction: column;
     overflow: auto;
+    background: transparent;
   }
 
   main {
@@ -61,6 +63,7 @@ body {
     flex: 1;
     flex-direction: column;
     overflow: auto;
+    background: transparent;
   }
 
   .main-max-width {
@@ -444,4 +447,8 @@ body {
       height: -webkit-fill-available;
     }
   }
+}
+
+.page-scrollable-content {
+  background-color: transparent;
 }

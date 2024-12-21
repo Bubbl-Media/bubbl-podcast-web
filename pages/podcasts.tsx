@@ -393,13 +393,18 @@ export default function Podcasts({
     <div className="flex flex-col h-screen">
       <Meta {...meta} />
       
-      {/* Background */}
-      <div className="fixed inset-0 -z-10">
+      {/* Background - Make sure it covers the full viewport */}
+      <div className="fixed inset-0" style={{ 
+        zIndex: 0,  // Change from -1 to 0
+        position: 'fixed',
+        width: '100vw',
+        height: '100vh'
+      }}>
         <WaveBackground />
       </div>
 
-      {/* Main content */}
-      <div className="flex flex-col flex-grow h-full">
+      {/* Main content - Add relative positioning and background transparency */}
+      <div className="flex flex-col flex-grow h-full relative" style={{ zIndex: 1 }}>
         <PageHeader
           noMarginBottom={
             (filterFrom !== PV.Filters.from._category && !!podcastsListDataCount) ||
@@ -428,7 +433,7 @@ export default function Podcasts({
             marginTop: '4px'
           }}
         />
-        <PageScrollableContent className="flex-grow">
+        <PageScrollableContent className="flex-grow bg-transparent">
           <div className="space-y-4">
             {!isCategoryPage && (
               <SearchBarFilter
@@ -467,7 +472,7 @@ export default function Podcasts({
                     filterFrom === PV.Filters.from._subscribed && 
                     (userInfo?.subscribedPodcastIds?.length === 0 && localSubscriptions.length === 0)
                   }
-                  className="space-y-2"
+                  className="space-y-2 bg-transparent"
                 >
                   {podcastsListData.map((podcast, index) => (
                     <div key={`${keyPrefix}-${index}-${podcast?.id}`} 

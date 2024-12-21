@@ -3,7 +3,7 @@
   flex: 1;
   overflow: auto;
   position: relative;
-  background-color: #04081A;
+  background-color: transparent;
 
   .inner-content {
     display: flex;
@@ -11,6 +11,7 @@
     flex-direction: column;
     margin: 0 24px;
     padding-top: 24px;
+    background-color: transparent;
   }
 }
 

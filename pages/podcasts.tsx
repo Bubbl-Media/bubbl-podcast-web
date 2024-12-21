@@ -121,6 +121,9 @@ export default function Podcasts({
   const [showLoginIframe, setShowLoginIframe] = useState(false)
   console.log('Initial showLoginIframe state:', showLoginIframe)
 
+  // Add this state to track bubbl.fm auth status
+  const [isBubblFmAuthenticated, setIsBubblFmAuthenticated] = useState<boolean>(false)
+
   /* useEffects */
 
   const handleEffect = () => {
@@ -285,54 +288,89 @@ export default function Podcasts({
         const userSubsRef = collection(db, 'users', currentUser.uid, 'podcast_subscriptions')
         const subsSnapshot = await getDocs(query(userSubsRef))
         
-        const podcastIds = subsSnapshot.docs.map(doc => doc.data().podcastId)
+        const podcastIds = subsSnapshot.docs.map(doc => doc.id)
         
+        if (podcastIds.length === 0) {
+          return { data: [[], 0] } // Return empty result if no subscriptions
+        }
+
         return getPodcastsByQuery({
           ids: podcastIds,
-          maxResults: true
+          ...(filterPage ? { page: filterPage } : {}),
+          ...(filterSearchText ? { searchText: filterSearchText } : {}),
+          ...(filterSort ? { sort: filterSort } : {}),
+          ...(videoOnlyMode ? { hasVideo: true } : {})
         })
       } else {
         // Use local subscriptions for non-logged-in users
+        if (localSubscriptions.length === 0) {
+          return { data: [[], 0] }
+        }
+
         return getPodcastsByQuery({
           ids: localSubscriptions,
-          maxResults: true
+          ...(filterPage ? { page: filterPage } : {}),
+          ...(filterSearchText ? { searchText: filterSearchText } : {}),
+          ...(filterSort ? { sort: filterSort } : {}),
+          ...(videoOnlyMode ? { hasVideo: true } : {})
         })
       }
     } catch (error) {
       console.error('Error fetching subscriptions:', error)
-      return getPodcastsByQuery({
-        ids: localSubscriptions,
-        maxResults: true
-      })
+      return { data: [[], 0] }
     }
   }
 
   /* Function Helpers */
 
+  const checkBubblFmAuth = async () => {
+    try {
+      const { auth } = await getFirebaseApp()
+      const currentUser = auth.currentUser
+      
+      if (!currentUser) {
+        setIsBubblFmAuthenticated(false)
+        return
+      }
+
+      const token = await currentUser.getIdToken()
+      const bubblFmOrigin = process.env.NODE_ENV === 'development' 
+        ? 'http://localhost:3000'
+        : 'https://bubbl.fm'
+
+      const response = await fetch(`${bubblFmOrigin}/api/auth-check`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
+      
+      const data = await response.json()
+      
+      if (data.type === 'AUTH_STATUS') {
+        setIsBubblFmAuthenticated(data.isAuthenticated)
+        
+        if (!data.isAuthenticated) {
+          setShowLoginIframe(true)
+        }
+      }
+    } catch (error) {
+      console.error('Error checking auth status:', error)
+      setIsBubblFmAuthenticated(false)
+      setShowLoginIframe(true)
+    }
+  }
+
   const _handlePrimaryOnChange = async (selectedItems: any[]) => {
-    console.log('=== Primary onChange Debug ===')
     const selectedItem = selectedItems[0]
     
     if (selectedItem.key === PV.Filters.from._subscribed) {
-      console.log('Subscribed selected, current iframe state:', showLoginIframe)
+      await checkBubblFmAuth()
       
-      try {
-        const { auth } = await getFirebaseApp()
-        if (!auth.currentUser) {
-          console.log('No user found, showing login iframe')
-          setShowLoginIframe(true)
-          console.log('State after setShowLoginIframe:', showLoginIframe)
-          return // Stop here if showing login
-        }
-      } catch (error) {
-        console.error('Auth check failed:', error)
-        setShowLoginIframe(true)
-        return
+      if (!isBubblFmAuthenticated) {
+        return // Stop here if not authenticated
       }
     }
 
-    // Only reach this if not showing login
-    console.log('Proceeding with filter change')
     setFilterQuery({
       ...filterQuery,
       filterCategoryId: null,

@@ -46,20 +46,21 @@ body {
     display: flex;
     flex-direction: row;
     flex: 1;
-    overflow: hidden;
+    overflow: auto;
   }
 
   .app-main-wrapper {
     display: flex;
     flex: 1;
     flex-direction: column;
+    overflow: auto;
   }
 
   main {
     display: flex;
     flex: 1;
     flex-direction: column;
-    overflow: hidden;
+    overflow: auto;
   }
 
   .main-max-width {

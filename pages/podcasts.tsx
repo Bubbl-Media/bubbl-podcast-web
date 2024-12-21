@@ -390,7 +390,7 @@ export default function Podcasts({
   }
 
   return (
-    <>
+    <div className="flex flex-col h-screen">
       <Meta {...meta} />
       
       {/* Background */}
@@ -399,7 +399,7 @@ export default function Podcasts({
       </div>
 
       {/* Main content */}
-      <div className="relative z-10">
+      <div className="flex flex-col flex-grow h-full">
         <PageHeader
           noMarginBottom={
             (filterFrom !== PV.Filters.from._category && !!podcastsListDataCount) ||
@@ -428,9 +428,7 @@ export default function Podcasts({
             marginTop: '4px'
           }}
         />
-        <PageScrollableContent 
-          className="bg-transparent"
-        >
+        <PageScrollableContent className="flex-grow">
           <div className="space-y-4">
             {!isCategoryPage && (
               <SearchBarFilter
@@ -550,7 +548,7 @@ export default function Podcasts({
           </div>
         </div>
       )}
-    </>
+    </div>
   )
 }
 

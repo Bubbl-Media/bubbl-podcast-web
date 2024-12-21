@@ -13,10 +13,18 @@ export const PageScrollableContent = ({
   style,
   noPaddingTop
 }: Props) => {
-  const innerContentClassName = classNames('inner-content main-max-width', noPaddingTop ? 'no-padding-top' : '')
+  const containerClassName = classNames(
+    'page-scrollable-content',
+    className
+  )
+  
+  const innerContentClassName = classNames(
+    'inner-content',
+    noPaddingTop ? 'no-padding-top' : ''
+  )
 
   return (
-    <div className={className} style={style}>
+    <div className={containerClassName} style={style}>
       <div className={innerContentClassName}>{children}</div>
     </div>
   )

@@ -49,6 +49,29 @@ interface ServerProps extends Page {
 
 const keyPrefix = 'pages_podcasts'
 
+const NavArrows = () => (
+  <div className="flex items-center gap-2 fixed top-4 left-4 z-50 md:relative md:top-0 md:left-0">
+    <button 
+      onClick={() => window.history.back()} 
+      className="w-10 h-10 rounded-full flex items-center justify-center bg-slate-900/50 backdrop-blur-sm border border-teal-500/20 hover:bg-slate-800/50"
+      aria-label="Go back"
+    >
+      <svg className="w-6 h-6 text-teal-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+      </svg>
+    </button>
+    <button 
+      onClick={() => window.history.forward()}
+      className="w-10 h-10 rounded-full flex items-center justify-center bg-slate-900/50 backdrop-blur-sm border border-teal-500/20 hover:bg-slate-800/50"
+      aria-label="Go forward"
+    >
+      <svg className="w-6 h-6 text-teal-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+      </svg>
+    </button>
+  </div>
+)
+
 export default function Podcasts({
   serverCategoryId,
   serverCookies,
@@ -393,18 +416,19 @@ export default function Podcasts({
     <div className="flex flex-col h-screen">
       <Meta {...meta} />
       
-      {/* Background - Make sure it covers the full viewport */}
-      <div className="fixed inset-0" style={{ 
-        zIndex: 0,  // Change from -1 to 0
-        position: 'fixed',
-        width: '100vw',
-        height: '100vh'
-      }}>
+      {/* Background */}
+      <div className="fixed inset-0" style={{ zIndex: -1 }}>
         <WaveBackground />
       </div>
 
-      {/* Main content - Add relative positioning and background transparency */}
-      <div className="flex flex-col flex-grow h-full relative" style={{ zIndex: 1 }}>
+      {/* Main content */}
+      <div className="flex flex-col flex-grow h-full">
+        <div className="flex items-center justify-between p-4">
+          <NavArrows />
+          <h1 className="text-4xl font-light">Podcasts</h1>
+          {/* Your filter dropdowns */}
+        </div>
+        
         <PageHeader
           noMarginBottom={
             (filterFrom !== PV.Filters.from._category && !!podcastsListDataCount) ||
@@ -433,7 +457,7 @@ export default function Podcasts({
             marginTop: '4px'
           }}
         />
-        <PageScrollableContent className="flex-grow bg-transparent">
+        <PageScrollableContent className="flex-grow">
           <div className="space-y-4">
             {!isCategoryPage && (
               <SearchBarFilter

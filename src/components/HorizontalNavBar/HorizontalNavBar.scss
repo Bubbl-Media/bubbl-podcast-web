@@ -1,5 +1,5 @@
 .horizontal-navbar-wrapper {
-  background-color: hsl(228 67% 6%);
+  background-color: transparent;
 
   .navbar-secondary {
     align-items: center;
@@ -57,6 +57,20 @@
 
 @media (max-width: $media-max-width-tablet) {
   .horizontal-navbar-wrapper {
-    display: none;
+    background-color: transparent;
+    
+    .navbar-secondary {
+      margin: 16px;
+      height: auto;
+      
+      .navbar-secondary__dropdown,
+      .navbar-secondary__theme-toggle {
+        display: none;
+      }
+
+      .navbar-secondary__page-navs {
+        display: flex;
+      }
+    }
   }
 }

@@ -118,3 +118,6 @@ yarn-error.log*
 
 # Sentry
 .sentryclirc
+
+# Firebase
+firebase.ts

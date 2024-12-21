@@ -22,6 +22,7 @@ type Props = {
   selectedKey?: string | number
   text?: string
   textLabel?: string
+  dropdownStyle?: React.CSSProperties
 }
 
 const contentRenderer = (props: Props, t: any) => {

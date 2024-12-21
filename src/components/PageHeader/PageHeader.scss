@@ -121,9 +121,22 @@
 
       .dropdowns {
         margin-top: 0;
+        flex-direction: column;
+        width: 100%;
+        position: relative;
+        
+        .dropdown-primary-wrapper,
+        .dropdown-secondary-wrapper {
+          width: 100%;
+          margin: 0 0 8px 0;
+          
+          > div {
+            width: 100%;
+          }
+        }
 
-        .dropdown-primary-wrapper {
-          margin-left: 0;
+        .switch-with-icons-wrapper {
+          margin: 8px 0;
         }
       }
     }

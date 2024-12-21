@@ -25,6 +25,7 @@ type Props = {
   secondarySelected?: string
   text: string
   videoOnlyMode?: boolean
+  dropdownStyle?: React.CSSProperties
 }
 
 export const PageHeader = ({
@@ -48,7 +49,8 @@ export const PageHeader = ({
   secondaryOptions,
   secondarySelected,
   text,
-  videoOnlyMode
+  videoOnlyMode,
+  dropdownStyle
 }: Props) => {
   const { t } = useTranslation()
   const wrapperClass = classnames(
@@ -94,22 +96,24 @@ export const PageHeader = ({
               {primaryOptions?.length && (
                 <div className='dropdown-primary-wrapper'>
                   <Dropdown
-                    dropdownWidthClass='width-small'
+                    dropdownWidthClass='width-full'
                     onChange={primaryOnChange}
                     options={primaryOptions}
                     outlineStyle
                     selectedKey={primarySelected}
+                    dropdownStyle={dropdownStyle}
                   />
                 </div>
               )}
               {secondaryOptions?.length && (
                 <div className='dropdown-secondary-wrapper'>
                   <Dropdown
-                    dropdownWidthClass='width-medium'
+                    dropdownWidthClass='width-full'
                     onChange={secondaryOnChange}
                     options={secondaryOptions}
                     outlineStyle
                     selectedKey={secondarySelected}
+                    dropdownStyle={dropdownStyle}
                   />
                 </div>
               )}

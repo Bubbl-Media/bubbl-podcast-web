@@ -42,6 +42,9 @@
     "test:e2e:suite_parallel": "./node_modules/.bin/nightwatch -c __tests__/e2e/conf/suite_parallel.conf.js -e chrome,firefox,ie"
   },
   "dependencies": {
+    "@firebase/app": "0.10.17",
+    "@firebase/auth": "1.8.1",
+    "@firebase/firestore": "4.7.5",
     "@fortawesome/fontawesome-svg-core": "1.2.36",
     "@fortawesome/free-brands-svg-icons": "5.15.4",
     "@fortawesome/free-regular-svg-icons": "5.15.4",
@@ -52,6 +55,7 @@
     "axios": "1.6.0",
     "classnames": "2.3.1",
     "debounce": "1.2.1",
+    "firebase": "11.1.0",
     "i18next": "21.6.16",
     "linkify-html": "3.0.4",
     "linkifyjs": "3.0.4",

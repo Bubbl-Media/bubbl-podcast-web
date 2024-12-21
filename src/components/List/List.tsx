@@ -10,6 +10,10 @@ interface ListProps {
   hideNoResultsMessage?: boolean
   isSubscribedFilter?: boolean
   className?: string
+  tutorialsLink?: string
+  tutorialsLinkText?: string
+  isDraggable?: boolean
+  listRef?: React.MutableRefObject<any>
 }
 
 export const List = ({
@@ -18,7 +22,11 @@ export const List = ({
   handleShowAllPodcasts,
   hideNoResultsMessage,
   isSubscribedFilter,
-  className
+  className,
+  tutorialsLink,
+  tutorialsLinkText,
+  isDraggable,
+  listRef
 }: ListProps) => {
   const { t } = useTranslation()
   const hasChildren = children !== null && children !== undefined

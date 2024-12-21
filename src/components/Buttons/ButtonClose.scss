@@ -5,8 +5,18 @@
   justify-content: center;
   height: $button-close-size;
   width: $button-close-size;
+  color: #7FFFD4;
+  border: 1px solid #7FFFD4;
 
   @include themeGen() {
-    background-color: getThemeVal('buttonCloseBackground');
+    background-color: transparent;
+  }
+
+  svg {
+    fill: #7FFFD4;
+  }
+
+  &:hover {
+    opacity: 0.8;
   }
 }

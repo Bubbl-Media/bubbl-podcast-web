@@ -27,10 +27,17 @@ export const getPodcastsByQuery = async ({
   subscribed
 }: PodcastQueryParams) => {
 
+  if (ids?.length) {
+    return request({
+      endpoint: PV.RoutePaths.api.podcast,
+      method: 'get',
+      query: { ids }
+    })
+  }
+
   const query = {
     ...(subscribed ? { subscribed: true } : {}),
     ...(podcastIds ? { ids: podcastIds } : {}),
-    ...(ids ? { ids } : {}),
     ...(categories ? { categories } : {}),
     ...(hasVideo ? { hasVideo } : {}),
     ...(maxResults ? { maxResults: true } : {}),

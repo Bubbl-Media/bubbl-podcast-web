@@ -23,18 +23,10 @@ import { determinePageCount } from '~/lib/utility/pagination'
 import { PV } from '~/resources'
 import { isNotAllSortOption } from '~/resources/Filters'
 import { getCategoryById, getCategoryBySlug, getTranslatedCategories } from '~/services/category'
-import { getPodcastsByQuery } from '~/services/podcast'
+import { getPodcastsByQuery, getPodcastById } from '~/services/podcast'
 import { getDefaultServerSideProps } from '~/services/serverSideHelpers'
 import { OmniAuralState } from '~/state/omniauralState'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import { getFirebaseApp } from '../src/services/firebase'
-import { 
-  collection, 
-  doc, 
-  writeBatch, 
-  getDocs, 
-  query 
-} from 'firebase/firestore'
 
 interface ServerProps extends Page {
   serverCategoryId: string | null
@@ -121,9 +113,6 @@ export default function Podcasts({
   const [showLoginIframe, setShowLoginIframe] = useState(false)
   console.log('Initial showLoginIframe state:', showLoginIframe)
 
-  // Add this state to track bubbl.fm auth status
-  const [isBubblFmAuthenticated, setIsBubblFmAuthenticated] = useState<boolean>(false)
-
   /* useEffects */
 
   const handleEffect = () => {
@@ -135,13 +124,25 @@ export default function Podcasts({
         }
         
         initialRender.current = false
-        const { data } = await clientQueryPodcasts()
-        const [newListData, newListCount] = data
-        setPodcastsListData(newListData)
-        setPodcastsListDataCount(newListCount)
+        console.log('9. Calling clientQueryPodcasts...')
+        const response = await clientQueryPodcasts()
+        console.log('10. Response from clientQueryPodcasts:', response)
+        console.log('11. Response.data:', response.data)
+
+        if (filterFrom === 'subscribed') {
+          const [podcasts, count] = response.data
+          console.log('12. Extracted podcasts:', podcasts)
+          console.log('13. Count:', count)
+          setPodcastsListData(podcasts)
+          setPodcastsListDataCount(count)
+        } else {
+          const [newListData, newListCount] = response.data
+          setPodcastsListData(newListData)
+          setPodcastsListDataCount(newListCount)
+        }
         
       } catch (err) {
-        console.log(err)
+        console.log('14. Error in handleEffect:', err)
       }
 
       OmniAural.pageIsLoadingHide()
@@ -174,6 +175,7 @@ export default function Podcasts({
   }, [])
 
   useEffect(() => {
+    console.log('Filter query changed:', filterQuery)
     handleEffect()
   }, [filterQuery])
 
@@ -195,62 +197,47 @@ export default function Podcasts({
   }, [showLoginIframe])
 
   useEffect(() => {
-    const handleMessage = async (event: MessageEvent) => {
-      console.log('=== Message Handler Debug ===')
-      
-      // Ignore React DevTools
-      if (event.data?.source === 'react-devtools-bridge') return
-      
-      console.log('Processing message:', event.data)
-      console.log('Current iframe state:', showLoginIframe)
+    const handleMessage = (event: MessageEvent) => {
+      // Only accept messages from bubbl.fm
+      if (!event.origin.includes('bubbl.fm') && !event.origin.includes('localhost')) {
+        return
+      }
 
-      if (event.data === '!_{"h":""}' || event.data?.type === 'LOGIN_SUCCESS') {
-        console.log('Login success detected')
+      if (event.data?.type === 'LOGIN_SUCCESS') {
+        console.log('Login successful, closing iframe')
         setShowLoginIframe(false)
-        
-        // Add delay to verify state change
-        setTimeout(() => {
-          console.log('Delayed state check:', showLoginIframe)
-        }, 100)
+        window.location.reload()
       }
     }
 
-    window.addEventListener("message", handleMessage)
-    return () => window.removeEventListener("message", handleMessage)
-  }, [showLoginIframe]) // Keep showLoginIframe in dependencies
-
-  const syncSubscriptionsToFirebase = async (userId: string) => {
-    try {
-      const { db } = await getFirebaseApp()
-      const batch = writeBatch(db)
-      
-      localSubscriptions.forEach(podcastId => {
-        const userSubsRef = collection(db, 'users', userId, 'podcast_subscriptions')
-        const subDoc = doc(userSubsRef, podcastId)
-        batch.set(subDoc, {
-          podcastId,
-          createdAt: new Date()
-        })
-      })
-
-      await batch.commit()
-
-      localStorage.removeItem('localSubscriptions')
-      setLocalSubscriptions([])
-    } catch (error) {
-      console.error('Error syncing subscriptions:', error)
-    }
-  }
+    window.addEventListener('message', handleMessage)
+    return () => window.removeEventListener('message', handleMessage)
+  }, [])
 
   /* Client-Side Queries */
 
   const clientQueryPodcasts = async () => {
-    if (filterFrom === PV.Filters.from._all) {
-      return clientQueryPodcastsAll()
-    } else if (filterFrom === PV.Filters.from._category) {
+    if (filterFrom === 'subscribed') {
+      // 1. Get the ID from localStorage
+      const localSubs = localStorage.getItem('localSubscriptions')
+      const podcastId = localSubs ? JSON.parse(localSubs)[0] : null // Get the first (and only) ID
+      
+      if (!podcastId) {
+        return { data: [[], 0] }
+      }
+
+      // 2. Query Podverse with JUST THIS ID
+      const response = await getPodcastById(podcastId)  // Use getPodcastById instead of getPodcastsByQuery
+
+      // 3. Return in the format the UI expects
+      return { data: [[response.data], 1] }
+    }
+
+    // Handle other cases as before
+    if (filterFrom === PV.Filters.from._category) {
       return clientQueryPodcastsByCategory()
-    } else if (filterFrom === PV.Filters.from._subscribed) {
-      return clientQueryPodcastsBySubscribed()
+    } else {
+      return clientQueryPodcastsAll()
     }
   }
 
@@ -278,106 +265,39 @@ export default function Podcasts({
     return getPodcastsByQuery(finalQuery)
   }
 
-  const clientQueryPodcastsBySubscribed = async () => {
-    try {
-      const { auth, db } = await getFirebaseApp()
-      const currentUser = auth.currentUser
-
-      if (currentUser) {
-        // Get subscriptions from Firebase
-        const userSubsRef = collection(db, 'users', currentUser.uid, 'podcast_subscriptions')
-        const subsSnapshot = await getDocs(query(userSubsRef))
-        
-        const podcastIds = subsSnapshot.docs.map(doc => doc.id)
-        
-        if (podcastIds.length === 0) {
-          return { data: [[], 0] } // Return empty result if no subscriptions
-        }
-
-        return getPodcastsByQuery({
-          ids: podcastIds,
-          ...(filterPage ? { page: filterPage } : {}),
-          ...(filterSearchText ? { searchText: filterSearchText } : {}),
-          ...(filterSort ? { sort: filterSort } : {}),
-          ...(videoOnlyMode ? { hasVideo: true } : {})
-        })
-      } else {
-        // Use local subscriptions for non-logged-in users
-        if (localSubscriptions.length === 0) {
-          return { data: [[], 0] }
-        }
-
-        return getPodcastsByQuery({
-          ids: localSubscriptions,
-          ...(filterPage ? { page: filterPage } : {}),
-          ...(filterSearchText ? { searchText: filterSearchText } : {}),
-          ...(filterSort ? { sort: filterSort } : {}),
-          ...(videoOnlyMode ? { hasVideo: true } : {})
-        })
-      }
-    } catch (error) {
-      console.error('Error fetching subscriptions:', error)
-      return { data: [[], 0] }
-    }
-  }
-
   /* Function Helpers */
 
-  const checkBubblFmAuth = async () => {
-    try {
-      const { auth } = await getFirebaseApp()
-      const currentUser = auth.currentUser
+  const _handlePrimaryOnChange = async (selectedItems: any[]) => {
+    console.log('_handlePrimaryOnChange called with:', selectedItems)
+    const selectedItem = selectedItems[0]
+    
+    if (selectedItem.key === 'subscribed') {
+      // Get local subscriptions
+      const localSubs = localStorage.getItem('localSubscriptions')
+      const podcastIds = localSubs ? JSON.parse(localSubs) : []
       
-      if (!currentUser) {
-        setIsBubblFmAuthenticated(false)
-        // Redirect to login page
-        window.location.href = process.env.NODE_ENV === 'development' 
-          ? 'http://localhost:3000/login'
-          : 'https://bubbl.fm/login'
+      console.log('Local subscriptions:', podcastIds)
+      
+      // If no subscriptions, show empty state
+      if (!podcastIds.length) {
+        setPodcastsListData([])
+        setPodcastsListDataCount(0)
         return
       }
 
-      const token = await currentUser.getIdToken()
-      const bubblFmOrigin = process.env.NODE_ENV === 'development' 
-        ? 'http://localhost:3000'
-        : 'https://bubbl.fm'
-
-      const response = await fetch(`${bubblFmOrigin}/api/auth-check`, {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      })
-      
-      const data = await response.json()
-      
-      if (data.type === 'AUTH_STATUS') {
-        setIsBubblFmAuthenticated(data.isAuthenticated)
+      // Query using specific podcast IDs instead of subscribed flag
+      try {
+        const response = await getPodcastsByQuery({
+          podcastIds, // Use this instead of subscribed: true
+          page: filterPage || 1,
+          sort: 'most-recent',
+          ...(videoOnlyMode ? { hasVideo: true } : {})
+        })
         
-        if (!data.isAuthenticated) {
-          // Redirect to login page
-          window.location.href = process.env.NODE_ENV === 'development' 
-            ? 'http://localhost:3000/login'
-            : 'https://bubbl.fm/login'
-        }
-      }
-    } catch (error) {
-      console.error('Error checking auth status:', error)
-      setIsBubblFmAuthenticated(false)
-      // Redirect to login page on error
-      window.location.href = process.env.NODE_ENV === 'development' 
-        ? 'http://localhost:3000/login'
-        : 'https://bubbl.fm/login'
-    }
-  }
-
-  const _handlePrimaryOnChange = async (selectedItems: any[]) => {
-    const selectedItem = selectedItems[0]
-    
-    if (selectedItem.key === PV.Filters.from._subscribed) {
-      await checkBubblFmAuth()
-      
-      if (!isBubblFmAuthenticated) {
-        return // Stop here if not authenticated
+        console.log('Subscribed podcasts response:', response)
+        
+      } catch (error) {
+        console.error('Error fetching subscribed podcasts:', error)
       }
     }
 
@@ -386,9 +306,9 @@ export default function Podcasts({
       filterCategoryId: null,
       filterFrom: selectedItem.key,
       filterPage: 1,
-      filterSort: selectedItem.key === PV.Filters.from._subscribed 
-        ? PV.Filters.sort._mostRecent 
-        : PV.Filters.sort._topPastWeek
+      filterSort: selectedItem.key === 'subscribed' 
+        ? 'most-recent'
+        : 'top-past-week'
     })
   }
 
@@ -587,44 +507,6 @@ export default function Podcasts({
           </div>
         </PageScrollableContent>
       </div>
-
-      {/* Login iframe */}
-      {showLoginIframe && (
-        <div style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          backgroundColor: 'rgba(0, 0, 0, 0.7)',
-          zIndex: 1000,
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center'
-        }}>
-          <div style={{
-            position: 'relative',
-            width: '90%',
-            maxWidth: '600px',
-            height: '80vh',
-            backgroundColor: '#04081A',
-            borderRadius: '8px',
-            overflow: 'hidden'
-          }}>
-            <iframe
-              src={process.env.NODE_ENV === 'development' 
-                ? "http://localhost:3000/login"
-                : "https://bubbl.fm/login"
-              }
-              style={{
-                width: '100%',
-                height: '100%',
-                border: 'none'
-              }}
-            />
-          </div>
-        </div>
-      )}
     </div>
   )
 }

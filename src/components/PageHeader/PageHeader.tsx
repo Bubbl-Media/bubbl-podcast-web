@@ -73,6 +73,12 @@ export const PageHeader = ({
   const divClickableRole = handleCollapse ? 'button' : ''
   const h1TabIndex = handleCollapse ? -1 : 0
 
+  console.log('PageHeader props:', {
+    primaryOptions,
+    primarySelected,
+    hasPrimaryOnChange: !!primaryOnChange
+  })
+
   return (
     <>
       <div className={wrapperClass}>

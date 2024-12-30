@@ -80,6 +80,13 @@ export const Dropdown = (props: Props) => {
     selectedKey,
     text
   } = props
+
+  console.log('Dropdown props:', {
+    options,
+    selectedKey,
+    onChange: !!onChange
+  })
+
   const { t } = useTranslation()
   const wrapperClass = classnames(
     outlineStyle ? 'outline-style' : '',
@@ -102,10 +109,16 @@ export const Dropdown = (props: Props) => {
       dropdownHandleRenderer={() => dropdownHandleRenderer(props.hideCaret)}
       itemRenderer={(obj: any) => customItemRenderer(obj, t)}
       labelField='label'
-      onChange={options.length > 1 ? onChange : null}
+      onChange={(values: any[]) => {
+        console.log('Dropdown onChange called with:', values)
+        if (values && values.length > 0) {
+          console.log('Calling parent onChange with:', [values[0]])
+          onChange([values[0]])
+        }
+      }}
       options={options}
       valueField='key'
-      values={[]}
+      values={selectedKey ? [options.find(opt => opt.key === selectedKey)].filter(Boolean) : []}
     />
   )
 }
